@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+
+defined('APPLICATION_PATH') || define(
+    'APPLICATION_PATH',
+    realpath(dirname(__FILE__) . '/src')
+);
+
+set_include_path(
+    implode(
+        PATH_SEPARATOR,
+        array(
+            APPLICATION_PATH,
+            realpath(APPLICATION_PATH . '/../library'),
+            get_include_path(),
+        )
+    )
+);
+
+require_once 'Application.php';
+
+$application = new BotLife_Application();
+$application->bootstrap();
