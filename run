@@ -11,7 +11,7 @@ set_include_path(
         PATH_SEPARATOR,
         array(
             APPLICATION_PATH,
-            realpath(APPLICATION_PATH . '/../library'),
+            realpath(APPLICATION_PATH . '/../library/IRCBot/src'),
             get_include_path(),
         )
     )
