@@ -1,0 +1,3 @@
+[submodule "library/IRCBot"]
+	path = library/IRCBot
+	url = git://github.com/Marlinc/IRCBot.git
