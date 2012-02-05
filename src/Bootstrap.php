@@ -3,6 +3,11 @@
 class BotLife_Bootstrap
 {
     
+    public function initDebugger()
+    {
+        IRCBot_Application::getInstance()->setDebugger(new BotLife_Debug());
+    }
+    
     public function initModules()
     {
         new BotLife_Modules_Main();
