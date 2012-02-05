@@ -10,7 +10,7 @@ class BotLife_Bootstrap
     
     public function run()
     {
-    
+        IRCBot_Application::getInstance()->getLoop()->startLoop();
     }
     
 }
