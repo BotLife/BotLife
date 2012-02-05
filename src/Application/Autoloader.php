@@ -11,10 +11,14 @@ class BotLife_Application_Autoloader
     public function autoload($class)
     {
         $tmp = explode('_', $class);
+        $package = $tmp[0];
         array_shift($tmp);
-        require_once implode(DIRECTORY_SEPARATOR, $tmp) . '.php';
-        array_unshift($tmp, 'IRCBot', 'src');
-        require_once implode(DIRECTORY_SEPARATOR, $tmp) . '.php';
+        if ($package == 'BotLife') {
+            require_once implode(DIRECTORY_SEPARATOR, $tmp) . '.php';
+        } elseif ($package == 'IRCBot') {
+            array_unshift($tmp, 'IRCBot', 'src');
+            require_once implode(DIRECTORY_SEPARATOR, $tmp) . '.php';
+        }
     }
 
 }
