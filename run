@@ -10,14 +10,14 @@ set_include_path(
     implode(
         PATH_SEPARATOR,
         array(
-            realpath(APPLICATION_PATH . '/../library/IRCBot/src'),
+            realpath(APPLICATION_PATH . '/../library'),
             APPLICATION_PATH,
             get_include_path(),
         )
     )
 );
 
-require_once 'src/Application.php';
+require_once 'Application.php';
 
 $application = new BotLife_Application();
 $application->bootstrap()

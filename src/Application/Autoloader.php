@@ -12,7 +12,9 @@ class BotLife_Application_Autoloader
     {
         $tmp = explode('_', $class);
         array_shift($tmp);
-        require implode(DIRECTORY_SEPARATOR, $tmp) . '.php';
+        require_once implode(DIRECTORY_SEPARATOR, $tmp) . '.php';
+        array_unshift($tmp, 'IRCBot', 'src');
+        require_once implode(DIRECTORY_SEPARATOR, $tmp) . '.php';
     }
 
 }
