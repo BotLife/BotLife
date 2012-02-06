@@ -10,7 +10,7 @@ set_include_path(
     implode(
         PATH_SEPARATOR,
         array(
-            realpath(APPLICATION_PATH . '/../library'),
+            realpath(APPLICATION_PATH . '/library'),
             APPLICATION_PATH,
             get_include_path(),
         )
