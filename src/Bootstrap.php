@@ -2,12 +2,15 @@
 
 namespace Botlife;
 
+use \IRCBot_Types_Bot as Bot;
+use \IRCBot_Application as Ircbot;
+
 class Bootstrap
 {
     
     public function initDebugger()
     {
-        \IRCBot_Application::getInstance()->setDebugger(new Debug());
+        Ircbot::getInstance()->setDebugger(new Debug());
     }
     
     public function initModules()
@@ -17,15 +20,15 @@ class Bootstrap
     
     public function initBot()
     {
-        $bot = new \IRCBot_Types_Bot();
+        $bot = new Bot();
         $bot->nickname = 'BotLife';
         $bot->connect('irc.digital-ground.nl');
-        \IRCBot_Application::getInstance()->getBotHandler()->addBot($bot);
+        Ircbot::getInstance()->getBotHandler()->addBot($bot);
     }
     
     public function run()
     {
-        \IRCBot_Application::getInstance()->getLoop()->startLoop();
+        Ircbot::getInstance()->getLoop()->startLoop();
     }
     
 }

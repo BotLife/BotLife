@@ -2,6 +2,8 @@
 
 namespace Botlife\Module;
 
+use \IRCBot_Application as Ircbot;
+
 class Main extends AModule
 {
 
@@ -11,8 +13,7 @@ class Main extends AModule
     
     public function __construct()
     {
-        \IRCBot_Application::getInstance()->getModuleHandler()
-            ->addModuleByObject($this);
+        Ircbot::getInstance()->getModuleHandler()->addModuleByObject($this);
     }
 
     public function onConnect()
