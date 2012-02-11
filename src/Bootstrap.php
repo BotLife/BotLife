@@ -12,7 +12,7 @@ class Bootstrap
     
     public function initModules()
     {
-        new Modules\Main();
+        new Module\Main();
     }
     
     public function initBot()

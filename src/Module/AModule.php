@@ -1,6 +1,6 @@
 <?php
 
-namespace Botlife\Modules;
+namespace Botlife\Module;
 
 class AModule extends \IRCBot_Modules_Abstract
 {
