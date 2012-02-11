@@ -1,6 +1,6 @@
 <?php
 
-namespace BotLife\Application;
+namespace Botlife\Application;
 
 class Autoloader
 {
@@ -15,7 +15,7 @@ class Autoloader
         if (strstr($class, '\\')) {
             $classPath = explode('\\', $class);
             $package = array_shift($classPath);
-            if ($package == 'BotLife') {
+            if ($package == 'Botlife') {
                 require_once implode(DIRECTORY_SEPARATOR, $classPath) . '.php';
             }
         } else {

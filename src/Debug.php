@@ -1,6 +1,6 @@
 <?php
 
-namespace BotLife;
+namespace Botlife;
 
 class Debug extends \IRCBot_Debugger_Abstract
 {

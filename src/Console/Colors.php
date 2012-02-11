@@ -1,6 +1,6 @@
 <?php
 
-namespace BotLife\Console;
+namespace Botlife\Console;
 
 class Colors
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace BotLife\Modules;
+namespace Botlife\Modules;
 
 class Main extends AModule
 {

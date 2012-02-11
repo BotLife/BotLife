@@ -1,6 +1,6 @@
 <?php
 
-namespace BotLife;
+namespace Botlife;
 
 class Application
 {
