@@ -8,7 +8,7 @@ class Debug extends \IRCBot_Debugger_Abstract
     public function log($category, $type, $message,
         $level = IRCBOT_DEBUG_NORMAL) {
         $c = new Application\Colors;
-        $c->output = Application\Colors::OUTPUT_CONSOLE;
+        $c->output = Application\Colors::OUTPUT_ANSI;
         echo $this->getSign($c, $category, $type)
             . ' ' . $c(1, $message)
             . PHP_EOL;
