@@ -78,7 +78,7 @@ class Colors
                     case self::STYLE_STRIKETHROUGH:
                         return;
                     case self::STYLE_ITALIC:
-                        return;  
+                        return chr(29);  
                     default: 
                         return chr(3) . $color;
                 }
