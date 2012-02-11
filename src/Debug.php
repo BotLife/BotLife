@@ -7,17 +7,17 @@ class Debug extends \IRCBot_Debugger_Abstract
 
     public function log($category, $type, $message,
         $level = IRCBOT_DEBUG_NORMAL) {
-        $C = new Console\Colors;
-        echo $this->getSign($category, $type)
-            . ' ' . $C(1, $message)
-            . PHP_EOL;   
+        $c = new Application\Colors;
+        $c->output = Application\Colors::OUTPUT_CONSOLE;
+        echo $this->getSign($c, $category, $type)
+            . ' ' . $c(1, $message)
+            . PHP_EOL;
     }
     
-    public function getSign($category, $type)
+    public function getSign($c, $category, $type)
     {
-        $C = new Console\Colors;
-        return $C(1) . '[' . $C(4, $category) . $C(1) . '|'
-            . $C(4, $type) . $C(1) . ']' . $C();
+        return $c(1) . '[' . $c(4, $category) . $c(1) . '|'
+            . $c(4, $type) . $c(1) . ']' . $c();
     }
 
 }
