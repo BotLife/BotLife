@@ -2,9 +2,6 @@
 
 namespace BotLife;
 
-require_once 'Bootstrap.php';
-require_once 'Application/Autoloader.php';
-
 class Application
 {
     

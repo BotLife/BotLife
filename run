@@ -18,6 +18,7 @@ set_include_path(
 );
 
 require_once 'Application.php';
+require_once 'Application/Autoloader.php';
 
 $application = new \BotLife\Application();
 $application->bootstrap()
