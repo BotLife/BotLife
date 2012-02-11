@@ -1,29 +1,31 @@
 <?php
 
-class BotLife_Bootstrap
+namespace BotLife;
+
+class Bootstrap
 {
     
     public function initDebugger()
     {
-        IRCBot_Application::getInstance()->setDebugger(new BotLife_Debug());
+        \IRCBot_Application::getInstance()->setDebugger(new Debug());
     }
     
     public function initModules()
     {
-        new BotLife_Modules_Main();
+        new Modules\Main();
     }
     
     public function initBot()
     {
-        $bot = new IRCBot_Types_Bot();
+        $bot = new \IRCBot_Types_Bot();
         $bot->nickname = 'BotLife';
-        $bot->connect('irc.mms-projects.net');
-        IRCBot_Application::getInstance()->getBotHandler()->addBot($bot);
+        $bot->connect('irc.digital-ground.nl');
+        \IRCBot_Application::getInstance()->getBotHandler()->addBot($bot);
     }
     
     public function run()
     {
-        IRCBot_Application::getInstance()->getLoop()->startLoop();
+        \IRCBot_Application::getInstance()->getLoop()->startLoop();
     }
     
 }

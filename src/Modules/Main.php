@@ -1,6 +1,8 @@
 <?php
 
-class BotLife_Modules_Main extends BotLife_Modules_Abstract
+namespace BotLife\Modules;
+
+class Main extends AModule
 {
 
     public $events = array(
@@ -9,7 +11,7 @@ class BotLife_Modules_Main extends BotLife_Modules_Abstract
     
     public function __construct()
     {
-        IRCBot_Application::getInstance()->getModuleHandler()
+        \IRCBot_Application::getInstance()->getModuleHandler()
             ->addModuleByObject($this);
     }
 

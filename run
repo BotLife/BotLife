@@ -19,6 +19,6 @@ set_include_path(
 
 require_once 'Application.php';
 
-$application = new BotLife_Application();
+$application = new \BotLife\Application();
 $application->bootstrap()
     ->run();

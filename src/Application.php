@@ -1,9 +1,11 @@
 <?php
 
+namespace BotLife;
+
 require_once 'Bootstrap.php';
 require_once 'Application/Autoloader.php';
 
-class BotLife_Application
+class Application
 {
     
     private $_bootstrap;
@@ -11,13 +13,13 @@ class BotLife_Application
     
     public function __construct()
     {
-        $this->_autoloader = new BotLife_Application_Autoloader();
+        $this->_autoloader = new Application\Autoloader();
     }
     
     public function getBootstrap()
     {
         if (!$this->_bootstrap) {
-            $this->_bootstrap = new BotLife_Bootstrap();
+            $this->_bootstrap = new Bootstrap();
         }
         return $this->_bootstrap;
     }

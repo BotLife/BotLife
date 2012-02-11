@@ -1,6 +1,8 @@
 <?php
 
-class BotLife_Debug extends IRCBot_Debugger_Abstract
+namespace BotLife;
+
+class Debug extends \IRCBot_Debugger_Abstract
 {
 
     public function log($category, $type, $message,
