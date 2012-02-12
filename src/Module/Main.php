@@ -2,7 +2,7 @@
 
 namespace Botlife\Module;
 
-use \IRCBot_Application as Ircbot;
+use \Ircbot\Application as Ircbot;
 
 class Main extends AModule
 {
@@ -19,12 +19,13 @@ class Main extends AModule
 
     public function onConnect()
     {
-        joinChan('#Dutch');
+        \Ircbot\joinChan('#Dutch');
     }
     
     public function setNetwork()
     {
-        $bot = Ircbot::getInstance()->getBotHandler()->getBotById(botId());
+        $bot = Ircbot::getInstance()->getBotHandler()
+            ->getBotById(\Ircbot\botId());
         $network = new \Botlife\Network\ANetwork;
         $network->convertIrcbotNetwork($bot->currentNetwork);
         $bot->currentNetwork = $network;

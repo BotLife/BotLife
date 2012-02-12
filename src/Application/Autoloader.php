@@ -17,14 +17,8 @@ class Autoloader
             $package = array_shift($classPath);
             if ($package == 'Botlife') {
                 require_once implode(DIRECTORY_SEPARATOR, $classPath) . '.php';
-            }
-        } else {
-            $tmp = explode('_', $class);
-            $package = $tmp[0];
-            array_shift($tmp);
-            if ($package == 'IRCBot') {
-                array_unshift($tmp, 'IRCBot', 'src');
-                require_once implode(DIRECTORY_SEPARATOR, $tmp) . '.php';
+            } elseif ($package == 'Ircbot') {
+                require_once 'IRCBot/src/' . implode(DIRECTORY_SEPARATOR, $classPath) . '.php';
             }
         }
     }

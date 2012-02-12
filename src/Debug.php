@@ -2,7 +2,7 @@
 
 namespace Botlife;
 
-class Debug extends \IRCBot_Debugger_Abstract
+class Debug extends \Ircbot\Application\Debug\ADebug
 {
 
     public function log($category, $type, $message,

@@ -19,6 +19,7 @@ set_include_path(
 
 require_once 'Application.php';
 require_once 'Application/Autoloader.php';
+require_once 'IRCBot/src/shortFunctions.php';
 
 $application = new \BotLife\Application();
 $application->bootstrap()

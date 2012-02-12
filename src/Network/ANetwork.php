@@ -2,11 +2,11 @@
 
 namespace Botlife\Network;
 
-class ANetwork extends \IRCBot_Types_Network
+class ANetwork extends \Ircbot\Type\Network
 {
     public $name;
     
-    public function convertIrcbotNetwork(\IRCBot_Types_Network $network)
+    public function convertIrcbotNetwork(\Ircbot\Type\Network $network)
     {
         $this->name = $network->name;
         $this->hostname = $network->hostname;

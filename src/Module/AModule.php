@@ -2,7 +2,7 @@
 
 namespace Botlife\Module;
 
-class AModule extends \IRCBot_Modules_Abstract
+class AModule extends \Ircbot\Module\AModule
 {
 
 }

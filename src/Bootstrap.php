@@ -2,8 +2,9 @@
 
 namespace Botlife;
 
-use \IRCBot_Types_Bot as Bot;
-use \IRCBot_Application as Ircbot;
+use \Ircbot\Type\Bot as Bot;
+use \Ircbot\Application as Ircbot;
+use \Botlife\Module\Main as MainModule;
 
 class Bootstrap
 {
@@ -15,7 +16,7 @@ class Bootstrap
     
     public function initModules()
     {
-        new Module\Main();
+        new MainModule;
     }
     
     public function initBot()
