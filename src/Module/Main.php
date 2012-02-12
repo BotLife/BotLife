@@ -8,8 +8,8 @@ class Main extends AModule
 {
 
     public $events = array(
-        'onConnect'       => 'onConnect',
         'on251'           => 'setNetwork',
+        'onConnect',
     );
     
     public function __construct()
