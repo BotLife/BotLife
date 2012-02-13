@@ -20,6 +20,8 @@ class Autoloader
             } elseif ($package == 'Ircbot') {
                 require_once 'IRCBot/src/' . implode(DIRECTORY_SEPARATOR, $classPath) . '.php';
             }
+        } else {
+            require_once $class . '.php';
         }
     }
 
