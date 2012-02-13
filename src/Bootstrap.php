@@ -6,6 +6,7 @@ use \Ircbot\Type\Bot as Bot;
 use \Ircbot\Application as Ircbot;
 use \Botlife\Module\Main as MainModule;
 use \Botlife\Module\Misc as MiscModule;
+use \Botlife\Module\Math as MathModule;
 
 class Bootstrap
 {
@@ -19,6 +20,7 @@ class Bootstrap
     {
         new MainModule;
         new MiscModule;
+        new MathModule;
     }
     
     public function initBot()
