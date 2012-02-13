@@ -11,11 +11,6 @@ class Main extends AModule
         'on251'           => 'setNetwork',
         'onConnect',
     );
-    
-    public function __construct()
-    {
-        Ircbot::getInstance()->getModuleHandler()->addModuleByObject($this);
-    }
 
     public function onConnect()
     {

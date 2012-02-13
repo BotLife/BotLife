@@ -80,6 +80,9 @@ class Colors
                     case self::STYLE_ITALIC:
                         return chr(29);  
                     default: 
+                        if ($color < 10) {
+                            $color = '0' . $color;
+                        }
                         return chr(3) . $color;
                 }
             } elseif ($this->output == self::OUTPUT_ANSI) {
