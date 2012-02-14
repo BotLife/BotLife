@@ -7,6 +7,7 @@ use \Ircbot\Application as Ircbot;
 use \Botlife\Module\Main as MainModule;
 use \Botlife\Module\Misc as MiscModule;
 use \Botlife\Module\Math as MathModule;
+use \Botlife\Module\Auth as AuthModule;
 
 class Bootstrap
 {
@@ -21,13 +22,14 @@ class Bootstrap
         new MainModule;
         new MiscModule;
         new MathModule;
+        new AuthModule;
     }
     
     public function initBot()
     {
         $bot = new Bot();
         $bot->nickname = 'BotLife';
-        $bot->connect('irc.digital-ground.nl');
+        $bot->connect('irc.swiftirc.net');
         Ircbot::getInstance()->getBotHandler()->addBot($bot);
     }
     
