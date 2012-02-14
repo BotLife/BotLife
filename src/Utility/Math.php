@@ -15,16 +15,17 @@ class Math
     
     public function alphaRound($val, $precision = 2)
     {
-        var_dump($val);
+        $units = array('k', 'm', 'b', 't');
         if ($val < 1000) {
             return $val;
         }
-        elseif ($val < 1000*1000 && $val >= 1000) {
-            return number_format($val / (1000), 2) . 'k';
-        } 
-        elseif ($val < 1000*1000*1000 && $val >= 1000*1000) {
-            return number_format($val / (1000*1000), 2) . 'm';
-        } 
+        foreach ($units as $key => $unit) {
+            $start = pow(1000, $key + 1);
+            if ($val > $start && $key + 1 != count($units)) {
+                continue;
+            }
+            return number_format($val / $start, $precision, ',', '.') . $unit;
+        }
     }
     
     static public function sqrt($int)
