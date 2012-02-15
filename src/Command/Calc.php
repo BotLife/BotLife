@@ -17,6 +17,7 @@ class Calc
     
     public function calc($event)
     {
+        $time = array($this->measureTime());
         $math = new \Botlife\Utility\Math;
         $exp = $event->matches['exp'];
         set_error_handler(array($this, 'handleErrors'));
@@ -38,9 +39,18 @@ class Calc
                 $response .= 'of a unknown error.';
             }
         }
-        \Ircbot\msg($event->target, $response);
+        $time[] = $this->measureTime();
+        \Ircbot\msg($event->target, $response . '(' . round(($time[1] - $time[0]) * 1000, 2) . 'ms)');
         restore_error_handler();
         $this->lastCalcErrors = 0;
+    }
+    
+    public function measureTime()
+    {
+        $time = microtime();
+        $time = explode(' ', $time);
+        $time = $time[1] + $time[0];
+        return $time;
     }
     
     public function handleErrors()

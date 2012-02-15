@@ -5,23 +5,26 @@ namespace Botlife\Utility;
 class Math
 {
 
+    public $units = array('k', 'm', 'b', 't');
+
     public function evaluate($formula)
     {
-        var_dump($formula);
         $math = new \EvalMath; 
         $math->fb = array('abs', 'sqrt');
+        foreach ($this->units as $key => $unit) {
+            $math->v[$unit] = pow(1000, $key + 1);
+        }
         return $math->evaluate($formula);
     }
     
     public function alphaRound($val, $precision = 2)
     {
-        $units = array('k', 'm', 'b', 't');
         if ($val < 1000) {
             return $val;
         }
-        foreach ($units as $key => $unit) {
+        foreach ($this->units as $key => $unit) {
             $start = pow(1000, $key + 1);
-            if ($val > $start && $key + 1 != count($units)) {
+            if ($val > $start && $key + 1 != count($this->units)) {
                 continue;
             }
             return number_format($val / $start, $precision, ',', '.') . $unit;
