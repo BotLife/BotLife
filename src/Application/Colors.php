@@ -54,8 +54,15 @@ class Colors
         self::STYLE_UNDERLINE     => '[4m',
         self::STYLE_REVERSE       => '[7m',
         self::STYLE_STRIKETHROUGH => '[9m',
-        self::STYLE_ITALIC        => '[3m',
-        
+        self::STYLE_ITALIC        => '[3m', 
+    );
+    private $_irc = array(
+        self::STYLE_NORMAL        => 15,
+        self::STYLE_BOLD          => 2,
+        self::STYLE_UNDERLINE     => 31,
+        self::STYLE_REVERSE       => 22,
+        self::STYLE_STRIKETHROUGH => null,
+        self::STYLE_ITALIC        => 29, 
     );
     
     public $output = self::OUTPUT_IRC;
@@ -66,24 +73,13 @@ class Colors
             return self::__invoke($color) . $text;
         } else {
             if ($this->output == self::OUTPUT_IRC) {
-                switch ($color) {
-                    case self::STYLE_NORMAL:
-                        return chr(15);
-                    case self::STYLE_BOLD:
-                        return chr(2);
-                    case self::STYLE_UNDERLINE:
-                        return chr(31);
-                    case self::STYLE_REVERSE:
-                        return chr(22);
-                    case self::STYLE_STRIKETHROUGH:
-                        return;
-                    case self::STYLE_ITALIC:
-                        return chr(29);  
-                    default: 
-                        if ($color < 10) {
-                            $color = '0' . $color;
-                        }
-                        return chr(3) . $color;
+                if (isset($this->_irc[$color])) {
+                    return sprintf('%c', $this->_irc[$color]);
+                } else {
+                    if ($color < 10) {
+                        $color = '0' . $color;
+                    }
+                    return chr(3) . $color;
                 }
             } elseif ($this->output == self::OUTPUT_ANSI) {
                 if (!isset($this->_ansi[$color])) {
