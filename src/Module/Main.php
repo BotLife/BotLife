@@ -14,7 +14,7 @@ class Main extends AModule
 
     public function onConnect()
     {
-        \Ircbot\joinChan('#BotLife,#snelle');
+        \Ircbot\joinChan('#BotLife,#BotLife.Team,#snelle');
     }
     
     public function setNetwork()

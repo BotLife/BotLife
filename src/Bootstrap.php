@@ -29,7 +29,7 @@ class Bootstrap
     {
         $bot = new Bot();
         $bot->nickname = 'BotLife';
-        $bot->connect('irc.swiftirc.net');
+        $bot->connect('84.28.22.160');
         Ircbot::getInstance()->getBotHandler()->addBot($bot);
     }
     
