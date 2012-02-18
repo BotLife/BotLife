@@ -8,6 +8,7 @@ use \Botlife\Module\Main as MainModule;
 use \Botlife\Module\Misc as MiscModule;
 use \Botlife\Module\Math as MathModule;
 use \Botlife\Module\Auth as AuthModule;
+use \Botlife\Module\Admin as AdminModule;
 
 class Bootstrap
 {
@@ -23,6 +24,7 @@ class Bootstrap
         new MiscModule;
         new MathModule;
         new AuthModule;
+        new AdminModule;
     }
     
     public function initBot()

@@ -5,18 +5,24 @@ namespace Botlife\Application;
 class Spamfilter
 {
 
+    private $_enabled = true;
+
     private $_hostFilter = array();
     private $_channelFilter = array();
 
     public function __construct()
     {
         $data = \Botlife\Application\Storage::loadData('spamfilter');
+        $this->_enabled = (bool) $data->enabled;
         $this->_hostFilter = (array) $data->filter->host;
         $this->_channelFilter = (array) $data->filter->channel;
     }
 
     public function checkCommand(\Ircbot\Type\MessageCommand $command)
     {
+        if (!$this->_enabled) {
+            return true;
+        }
         $host = strtolower($command->mask->host);
         if (isset($this->_hostFilter[$host])) {
             ++$this->_hostFilter[$host];
@@ -59,6 +65,7 @@ class Spamfilter
     public function __destruct()
     {
         $data = \Botlife\Application\Storage::loadData('spamfilter');
+        $data->enabled = $this->_enabled;
         $data->filter->host = $this->_hostFilter;
         $data->filter->channel = $this->_channelFilter;
         \Botlife\Application\Storage::saveData('spamfilter', $data);
