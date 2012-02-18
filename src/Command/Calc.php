@@ -17,6 +17,9 @@ class Calc
     
     public function calc($event)
     {
+        if (!\Botlife\Application\Spamfilter::checkCommand($event)) {
+            return;
+        }
         $time = array($this->measureTime());
         $math = new \Botlife\Utility\Math;
         $exp = $event->matches['exp'];

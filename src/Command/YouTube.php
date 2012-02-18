@@ -12,6 +12,9 @@ class YouTube
 
     public function lookup($event)
     {
+        if (!\Botlife\Application\Spamfilter::checkCommand($event)) {
+            return;
+        }
         $videoId = (empty($event->matches['id'])) ? $event->matches['idlong'] : $event->matches['id'];
         $data = $this->getData($videoId);
         $C = new \BotLife\Application\Colors;

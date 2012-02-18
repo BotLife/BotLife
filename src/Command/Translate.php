@@ -14,6 +14,9 @@ class Translate
 
     public function translate($event)
     {
+        if (!\Botlife\Application\Spamfilter::checkCommand($event)) {
+            return;
+        }
         if (!in_array(strtolower($event->matches['from']), $this->languages)) {
             $msg = 'The language you\'re trying to translate from isn\'t supported';
             \Ircbot\notice(
