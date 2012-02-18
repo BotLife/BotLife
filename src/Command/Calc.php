@@ -17,7 +17,8 @@ class Calc
     
     public function calc($event)
     {
-        if (!\Botlife\Application\Spamfilter::checkCommand($event)) {
+        $spamfilter = new \Botlife\Application\Spamfilter;
+        if (!$spamfilter->checkCommand($event)) {
             return;
         }
         $time = array($this->measureTime());

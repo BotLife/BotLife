@@ -13,7 +13,7 @@ class Main extends AModule
         'onConnect',
     );
 
-    public $_oldTime;
+    public $_oldTime = array();
 
     public function onConnect()
     {
@@ -31,12 +31,18 @@ class Main extends AModule
     
     public function loopIterate()
     {
-        if (!$this->_oldTime) {
-            $this->_oldTime = time();
+        if (empty($this->_oldTime)) {
+            $this->_oldTime[0] = time();
+            $this->_oldTime[1] = time();
         }
-        if ((time() - $this->_oldTime) >= 3) {
-            \Botlife\Application\Spamfilter::decreaseAmount();
-            $this->_oldTime = time();
+        if ((time() - $this->_oldTime[0]) >= 3) {
+            $spamfilter = new \Botlife\Application\Spamfilter;
+            $spamfilter->decreaseAmount();
+            $this->_oldTime[0] = time();
+        }
+        if ((time() - $this->_oldTime[1]) >= 60) {
+            \Botlife\Application\Storage::saveToDisk();
+            $this->_oldTime[1] = time();
         }
     }
 

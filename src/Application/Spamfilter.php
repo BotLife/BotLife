@@ -5,31 +5,63 @@ namespace Botlife\Application;
 class Spamfilter
 {
 
-    static private $_hostFilter = array();
+    private $_hostFilter = array();
+    private $_channelFilter = array();
 
-    static public function checkCommand(\Ircbot\Type\MessageCommand $command)
+    public function __construct()
+    {
+        $data = \Botlife\Application\Storage::loadData('spamfilter');
+        $this->_hostFilter = (array) $data->filter->host;
+        $this->_channelFilter = (array) $data->filter->channel;
+    }
+
+    public function checkCommand(\Ircbot\Type\MessageCommand $command)
     {
         $host = strtolower($command->mask->host);
-        if (isset(self::$_hostFilter[$host])) {
-            ++self::$_hostFilter[$host];
+        if (isset($this->_hostFilter[$host])) {
+            ++$this->_hostFilter[$host];
         } else {
-            self::$_hostFilter[$host] = 1;
+            $this->_hostFilter[$host] = 1;
         }
-        if (self::$_hostFilter[$host] >= 3) {
+        if (substr($command->target, 0, 1) == '#') {
+            $channel = strtolower($command->target);
+            if (isset($this->_channelFilter[$channel])) {
+                ++$this->_channelFilter[$channel];
+            } else {
+                $this->_channelFilter[$channel] = 1;
+            }
+            if ($this->_channelFilter[$channel] >= 3) {
+                return false;
+            }
+        }
+        if ($this->_hostFilter[$host] >= 3) {
             return false;
-        } else {
-            return true;
+        }
+        return true;
+    }
+    
+    public function decreaseAmount()
+    {
+        foreach ($this->_hostFilter as $host => &$commands) {
+            --$commands;
+            if ($commands == 0) {
+                unset($this->_hostFilter[$host]);
+            }
+        }
+        foreach ($this->_channelFilter as $channel => &$commands) {
+            --$commands;
+            if ($commands == 0) {
+                unset($this->_channelFilter[$channel]);
+            }
         }
     }
     
-    static public function decreaseAmount()
+    public function __destruct()
     {
-        foreach (self::$_hostFilter as $host => &$commands) {
-            --$commands;
-            if ($commands == 0) {
-                unset(self::$_hostFilter[$host]);
-            }
-        }
+        $data = \Botlife\Application\Storage::loadData('spamfilter');
+        $data->filter->host = $this->_hostFilter;
+        $data->filter->channel = $this->_channelFilter;
+        \Botlife\Application\Storage::saveData('spamfilter', $data);
     }
 
 }

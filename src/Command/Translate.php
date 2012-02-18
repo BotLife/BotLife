@@ -14,7 +14,8 @@ class Translate
 
     public function translate($event)
     {
-        if (!\Botlife\Application\Spamfilter::checkCommand($event)) {
+        $spamfilter = new \Botlife\Application\Spamfilter;
+        if (!$spamfilter->checkCommand($event)) {
             return;
         }
         if (!in_array(strtolower($event->matches['from']), $this->languages)) {
