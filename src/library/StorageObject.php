@@ -3,6 +3,11 @@
 class StorageObject
 {
     
+    public function __isset($key)
+    {
+        return isset($this->$key);
+    }
+    
     public function __get($key)
     {
         if (!isset($this->$key)) {
