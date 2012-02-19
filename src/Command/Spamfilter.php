@@ -18,7 +18,7 @@ class Spamfilter extends ACommand
         if (strtolower($event->target) != '#botlife.team') {
             return;
         }
-        if (strtolower($event->auth) != 'marlinc') {
+        if (!in_array(strtolower($event->auth), array('marlinc', 'adrenaline'))) {
             return;
         }
         if (isset($event->matches['option'])) {
