@@ -7,15 +7,17 @@ class Spamfilter
 
     private $_enabled;
 
-    private $_hostFilter = array();
+    private $_hostFilter    = array();
     private $_channelFilter = array();
-
+    private $_ignore        = array();
+    
     public function __construct()
     {
         $data = \Botlife\Application\Storage::loadData('spamfilter');
-        $this->_enabled = (bool) $data->enabled;
-        $this->_hostFilter = (array) $data->filter->host;
+        $this->_enabled       = (bool) $data->enabled;
+        $this->_hostFilter    = (array) $data->filter->host;
         $this->_channelFilter = (array) $data->filter->channel;
+        $this->_ignore        = (array) $data->ignore;
     }
 
     public function checkCommand(\Ircbot\Type\MessageCommand $command)
@@ -24,6 +26,11 @@ class Spamfilter
             return true;
         }
         $host = strtolower($command->mask->host);
+        foreach ($this->_ignore as $pattern) {
+            if (fnmatch($pattern, $command->mask)) {
+                return;
+            }
+        }
         if (isset($this->_hostFilter[$host])) {
             ++$this->_hostFilter[$host];
         } else {
@@ -65,9 +72,10 @@ class Spamfilter
     public function __destruct()
     {
         $data = \Botlife\Application\Storage::loadData('spamfilter');
-        $data->enabled = $this->_enabled;
-        $data->filter->host = $this->_hostFilter;
+        $data->enabled         = $this->_enabled;
+        $data->filter->host    = $this->_hostFilter;
         $data->filter->channel = $this->_channelFilter;
+        $data->ignore          = $this->_ignore;
         \Botlife\Application\Storage::saveData('spamfilter', $data);
     }
 
