@@ -88,6 +88,12 @@ class AModule extends \Ircbot\Module\AModule
             $whois->event->auth = null;
         }
         
+        $identifiers = \Ircbot\Application::getInstance()
+            ->getIdentifierHandler();
+        $identifiers->botId = $whois->event->botId;
+        \Ircbot\Utility\String::tokenize($whois->event->message);
+        $identifiers->set($whois->event->getIdentifiers());
+        
         call_user_func($whois->callback, $whois->event);
     }
 
