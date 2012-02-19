@@ -2,7 +2,7 @@
 
 namespace Botlife\Command;
 
-class Calc
+class Calc extends ACommand
 {
 
     const ERR_DEVIDEBYZERO = 1;
@@ -17,10 +17,6 @@ class Calc
     
     public function calc($event)
     {
-        $spamfilter = new \Botlife\Application\Spamfilter;
-        if (!$spamfilter->checkCommand($event)) {
-            return;
-        }
         $cache = \Botlife\Application\Storage::loadData('math-calc');
         if (!isset($cache->data)) {
             $cache->data = array();

@@ -2,7 +2,7 @@
 
 namespace Botlife\Command;
 
-class Translate
+class Translate extends ACommand
 {
 
     public $regex = array(
@@ -14,10 +14,6 @@ class Translate
 
     public function translate($event)
     {
-        $spamfilter = new \Botlife\Application\Spamfilter;
-        if (!$spamfilter->checkCommand($event)) {
-            return;
-        }
         if (!in_array(strtolower($event->matches['from']), $this->languages)) {
             $msg = 'The language you\'re trying to translate from isn\'t supported';
             \Ircbot\notice(

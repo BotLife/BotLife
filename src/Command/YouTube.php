@@ -2,7 +2,7 @@
 
 namespace Botlife\Command;
 
-class YouTube
+class YouTube extends ACommand
 {
 
     public $regex = array(
@@ -12,10 +12,6 @@ class YouTube
 
     public function lookup($event)
     {
-        $spamfilter = new \Botlife\Application\Spamfilter;
-        if (!$spamfilter->checkCommand($event)) {
-            return;
-        }
         $videoId = (empty($event->matches['id'])) ? $event->matches['idlong'] : $event->matches['id'];
         $data = $this->getData($videoId);
         $C = new \BotLife\Application\Colors;

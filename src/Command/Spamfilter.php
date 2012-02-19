@@ -2,15 +2,16 @@
 
 namespace Botlife\Command;
 
-class Spamfilter
+class Spamfilter extends ACommand
 {
 
     public $regex = array(
         '/^SPAMFILTER( )?(?P<option>ENABLE|DISABLE|STATUS)?$/i'
     );
     
-    public $action   = 'spamfilter';
-    public $needAuth = true;
+    public $action          = 'spamfilter';
+    public $needsAuth       = true;
+    public $needsSpamfilter = false;
 
     public function spamfilter($event)
     {   
