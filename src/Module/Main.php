@@ -9,12 +9,15 @@ class Main extends AModule
 
     public $events = array(
         'on251'           => 'setNetwork',
+        'loopIterate',
         'onConnect',
     );
 
+    public $_oldTime = array();
+
     public function onConnect()
     {
-        \Ircbot\joinChan('#BotLife,#snelle');
+        \Ircbot\joinChan('#BotLife,#BotLife.Team');
     }
     
     public function setNetwork()
@@ -24,6 +27,23 @@ class Main extends AModule
         $network = new \Botlife\Network\ANetwork;
         $network->convertIrcbotNetwork($bot->currentNetwork);
         $bot->currentNetwork = $network;
+    }
+    
+    public function loopIterate()
+    {
+        if (empty($this->_oldTime)) {
+            $this->_oldTime[0] = time();
+            $this->_oldTime[1] = time();
+        }
+        if ((time() - $this->_oldTime[0]) >= 3) {
+            $spamfilter = new \Botlife\Application\Spamfilter;
+            $spamfilter->decreaseAmount();
+            $this->_oldTime[0] = time();
+        }
+        if ((time() - $this->_oldTime[1]) >= 60) {
+            \Botlife\Application\Storage::saveToDisk();
+            $this->_oldTime[1] = time();
+        }
     }
 
 }

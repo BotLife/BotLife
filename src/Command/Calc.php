@@ -2,7 +2,7 @@
 
 namespace Botlife\Command;
 
-class Calc
+class Calc extends ACommand
 {
 
     const ERR_DEVIDEBYZERO = 1;
@@ -17,11 +17,20 @@ class Calc
     
     public function calc($event)
     {
+        $cache = \Botlife\Application\Storage::loadData('math-calc');
+        if (!isset($cache->data)) {
+            $cache->data = array();
+        }
         $time = array($this->measureTime());
-        $math = new \Botlife\Utility\Math;
         $exp = $event->matches['exp'];
-        set_error_handler(array($this, 'handleErrors'));
-        $data = $math->evaluate($exp);
+        $math = new \Botlife\Utility\Math;
+        if (!isset($cache->data[$exp])) {
+            set_error_handler(array($this, 'handleErrors'));
+            $data = $math->evaluate($exp);
+            $cache->data[$exp] = $data;
+        } else {
+            $data = $cache->data[$exp];
+        }
         $response = '[Calc] ';
         if (is_numeric($data)) {
             $response .= $exp . ' = ' . number_format($data, 2, ',', '.') . ' (' . $math->alphaRound($data) . ')';
@@ -41,6 +50,7 @@ class Calc
         }
         $time[] = $this->measureTime();
         \Ircbot\msg($event->target, $response . '(' . round(($time[1] - $time[0]) * 1000, 2) . 'ms)');
+        \Botlife\Application\Storage::saveData('math-calc', $cache);
         restore_error_handler();
         $this->lastCalcErrors = 0;
     }

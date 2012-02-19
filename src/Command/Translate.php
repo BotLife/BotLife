@@ -2,7 +2,7 @@
 
 namespace Botlife\Command;
 
-class Translate
+class Translate extends ACommand
 {
 
     public $regex = array(

@@ -8,6 +8,7 @@ use \Botlife\Module\Main as MainModule;
 use \Botlife\Module\Misc as MiscModule;
 use \Botlife\Module\Math as MathModule;
 use \Botlife\Module\Auth as AuthModule;
+use \Botlife\Module\Admin as AdminModule;
 
 class Bootstrap
 {
@@ -23,13 +24,19 @@ class Bootstrap
         new MiscModule;
         new MathModule;
         new AuthModule;
+        new AdminModule;
     }
     
     public function initBot()
     {
+        include 'config.php';
         $bot = new Bot();
+        $bot->ident = 'BotLife';
         $bot->nickname = 'BotLife';
-        $bot->connect('irc.swiftirc.net');
+        $bot->connect('192.168.0.20', 8000);
+        $bot->sendRawData(
+            new \Ircbot\Command\Pass($bnc_pass)
+        );
         Ircbot::getInstance()->getBotHandler()->addBot($bot);
     }
     

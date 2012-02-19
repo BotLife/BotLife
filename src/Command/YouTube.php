@@ -2,7 +2,7 @@
 
 namespace Botlife\Command;
 
-class YouTube
+class YouTube extends ACommand
 {
 
     public $regex = array(
@@ -27,7 +27,7 @@ class YouTube
         $response .= $C(12, '(') . $C(3, $data->uploader) . $C(12, ') - ');
         $response .= $C(12, 'Favorites: ') . $C(3, number_format($data->timesFavorited));
         $response .= $C(12, ' - Views: ') . $C(3, number_format($data->views));
-        \Ircbot\notice($event->mask->nickname, $response);
+        \Ircbot\msg($event->target, $response);
     }
     
     public function getData($videoId)
