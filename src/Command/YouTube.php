@@ -9,9 +9,15 @@ class YouTube extends ACommand
         '/(http\:\/\/)?(www\.)?(youtube\.com\/watch\?(.*)?v\=(?P<idlong>[A-Za-z0-9_-]+)(\&(.*))?|youtu\.be\/(?P<id>[A-Za-z0-9_-]+))/',
     );
     public $action = 'lookup';
-
+    
+    private $_lastrun;
+    
     public function lookup($event)
     {
+        if ((time() - $this->_lastrun) <= 3) {
+            return;
+        }
+        $this->_lastrun = time();
         $videoId = (empty($event->matches['id'])) ? $event->matches['idlong'] : $event->matches['id'];
         $data = $this->getData($videoId);
         $C = new \BotLife\Application\Colors;
