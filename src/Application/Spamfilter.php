@@ -5,7 +5,7 @@ namespace Botlife\Application;
 class Spamfilter
 {
 
-    private $_enabled = true;
+    private $_enabled;
 
     private $_hostFilter = array();
     private $_channelFilter = array();

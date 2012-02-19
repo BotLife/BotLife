@@ -29,9 +29,14 @@ class Bootstrap
     
     public function initBot()
     {
+        include 'config.php';
         $bot = new Bot();
+        $bot->ident = 'BotLife';
         $bot->nickname = 'BotLife';
-        $bot->connect('84.28.22.160');
+        $bot->connect('192.168.0.20', 8000);
+        $bot->sendRawData(
+            new \Ircbot\Command\Pass($bnc_pass)
+        );
         Ircbot::getInstance()->getBotHandler()->addBot($bot);
     }
     
