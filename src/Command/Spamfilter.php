@@ -6,14 +6,18 @@ class Spamfilter
 {
 
     public $regex = array(
-        '/^SPAMFILTER( )?(?P<option>ENABLE|DISABLE)?$/i'
+        '/^SPAMFILTER( )?(?P<option>ENABLE|DISABLE|STATUS)?$/i'
     );
     
-    public $action = 'spamfilter';
+    public $action   = 'spamfilter';
+    public $needAuth = true;
 
     public function spamfilter($event)
     {   
         if (strtolower($event->target) != '#botlife.team') {
+            return;
+        }
+        if (strtolower($event->auth) != 'marlinc') {
             return;
         }
         if (isset($event->matches['option'])) {
