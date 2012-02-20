@@ -43,6 +43,20 @@ class Spamfilter
             } else {
                 $this->_channelFilter[$channel] = 1;
             }
+        }
+        if ($this->_hostFilter[$host] == 3) {
+            \Ircbot\Application::getInstance()->getEventHandler()
+                ->raiseEvent(
+                    'spamfilterCaughtHost', array($host, $command)
+                );
+        }
+        if (substr($command->target, 0, 1) == '#') {
+            if ($this->_channelFilter[$channel] == 3) {
+                \Ircbot\Application::getInstance()->getEventHandler()
+                ->raiseEvent(
+                    'spamfilterCaughtChannel', array($channel, $command)
+                );
+            }
             if ($this->_channelFilter[$channel] >= 3) {
                 return false;
             }
