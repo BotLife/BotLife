@@ -1,8 +1,8 @@
 <?php
 
-namespace Botlife\Command;
+namespace Botlife\Command\Admin;
 
-class Spamfilter extends ACommand
+class Spamfilter extends \Botlife\Command\ACommand
 {
 
     public $regex = array(

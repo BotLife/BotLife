@@ -10,7 +10,7 @@ class Admin extends AModule
         'spamfilterCaughtChannel'
     );
     public $commands = array(
-        '\Botlife\Command\Spamfilter',
+        '\Botlife\Command\Admin\Spamfilter',
         '\Botlife\Command\Admin\Command',
     );
     
