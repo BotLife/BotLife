@@ -15,6 +15,11 @@ class AModule extends \Ircbot\Module\AModule
     {
         \Ircbot\Application::getInstance()->getModuleHandler()
             ->addModuleByObject($this);
+        $commands = \Botlife\Application\Storage::loadData('commands');
+        if (!isset($commands->data)) {
+            $commands->data = array();
+        }
+        \Botlife\Application\Storage::saveData('commands', $commands);
         foreach ($this->commands as $command) {
             $command = new $command;
             if (is_array($command->regex)) {
@@ -40,7 +45,15 @@ class AModule extends \Ircbot\Module\AModule
     
     public function callback($event)
     {
-        list($event, $command) = $event;        
+        list($event, $command) = $event; 
+        $commands = \Botlife\Application\Storage::loadData('commands');
+        if (!$commands->data[get_class($command)]->enabled) {
+            \Ircbot\notice($event->mask->nickname, 'This command is disabled');
+            return;
+        }
+        if ($command->needsAdmin) {
+            $command->needsAuth = true;
+        }
         if ($command->needsSpamfilter) {
             $spamfilter = new \Botlife\Application\Spamfilter;
             if (!$spamfilter->checkCommand($event)) {
@@ -57,6 +70,7 @@ class AModule extends \Ircbot\Module\AModule
             $hash = md5($event->mask->nickname . ';' . $event->botId);
             $whoises->$hash->event = $event;
             $whoises->$hash->callback = array($command, $command->action);
+            $whoises->$hash->event->matchesB = $event->matches;
             \Botlife\Application\Storage::saveData('whois-db', $whoises);
         } else {
             call_user_func(array($command, $command->action), $event);
@@ -87,12 +101,23 @@ class AModule extends \Ircbot\Module\AModule
         } else {
             $whois->event->auth = null;
         }
+        if ($whois->callback[0]->needsAdmin) {
+            $admins = array('marlinc', 'adrenaline');
+            if (strtolower($whois->event->target) != '#botlife.team') {
+                return;
+            }
+            if (!in_array(strtolower($whois->event->auth), $admins)) {
+                return;
+            }
+        }
         
         $identifiers = \Ircbot\Application::getInstance()
             ->getIdentifierHandler();
         $identifiers->botId = $whois->event->botId;
         \Ircbot\Utility\String::tokenize($whois->event->message);
         $identifiers->set($whois->event->getIdentifiers());
+        
+        $whois->event->matches = $whois->event->matchesB;
         
         call_user_func($whois->callback, $whois->event);
     }
