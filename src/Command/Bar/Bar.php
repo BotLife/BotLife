@@ -37,23 +37,29 @@ class Bar extends \Botlife\Command\ACommand
             $waitTime = ($user->lastPlayed + $user->waitTime) - time();
             \Ircbot\Notice(
                 $event->mask->nickname,
-                'You still need to wait ' . $waitTime . ' seconds before you '
-                    . 'can use bar again'
+                'You still need to wait ' . gmdate('i:s', $waitTime)
+                    . ' seconds before you can use bar again'
             );
             return;
         }
         $bars = round(rand(1, 56) * 10.3, 0);
         $user->bars = $user->bars + $bars;
         $user->lastPlayed = time();
-        $user->waitTime   = round(rand(1,56) * 70.7, 0);
+        $user->waitTime   = round(rand(1,56) * 130.7, 0);
         \Ircbot\Notice(
             $event->mask->nickname,
-            'You did get ' . $bars . ' bars. You now have ' . $user->bars
-                . ' bars.'
+            $this->getMessage($event->mask->nickname, $bars) . ' '
+                . 'You now have ' . $user->bars . ' bars.'
         );
-        var_dump($user);
         $bar->users[strtolower($event->auth)] = $user;
         \Botlife\Application\Storage::saveData('bar', $bar);
+    }
+    
+    public function getMessage($user, $bars)
+    {
+        $data = parse_ini_file('bar-messages.ini');
+        $message = $data['message'][array_rand($data['message'])];
+        return vsprintf($message, func_get_args());
     }
 
 }
