@@ -10,17 +10,11 @@ class Spamfilter extends \Botlife\Command\ACommand
     );
     
     public $action          = 'spamfilter';
-    public $needsAuth       = true;
+    public $needsAdmin      = true;
     public $needsSpamfilter = false;
 
     public function spamfilter($event)
     {   
-        if (strtolower($event->target) != '#botlife.team') {
-            return;
-        }
-        if (!in_array(strtolower($event->auth), array('marlinc', 'adrenaline'))) {
-            return;
-        }
         if (isset($event->matches['option'])) {
             $option = strtoupper($event->matches['option']);
         } else {

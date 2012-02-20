@@ -5,20 +5,14 @@ namespace Botlife\Command\Admin;
 class Command extends \Botlife\Command\ACommand
 {
 
-    public $regex     = array(
+    public $regex      = array(
         '/^COMMAND( )?(?P<option>DISABLE|ENABLE|STATUS)?/i',
     );
-    public $action    = 'run';
-    public $needsAuth = true;
+    public $action     = 'run';
+    public $needsAdmin = true;
     
     public function run($event)
     {
-        if (strtolower($event->target) != '#botlife.team') {
-            return;
-        }
-        if (!in_array(strtolower($event->auth), array('marlinc', 'adrenaline'))) {
-            return;
-        }
         if (isset($event->matches['option'])) {
             $option = strtoupper($event->matches['option']);
         } else {

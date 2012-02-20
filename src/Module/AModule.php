@@ -51,6 +51,9 @@ class AModule extends \Ircbot\Module\AModule
             \Ircbot\notice($event->mask->nickname, 'This command is disabled');
             return;
         }
+        if ($command->needsAdmin) {
+            $command->needsAuth = true;
+        }
         if ($command->needsSpamfilter) {
             $spamfilter = new \Botlife\Application\Spamfilter;
             if (!$spamfilter->checkCommand($event)) {
@@ -97,6 +100,15 @@ class AModule extends \Ircbot\Module\AModule
             $whois->event->auth = \Ircbot\token('0');
         } else {
             $whois->event->auth = null;
+        }
+        if ($whois->callback[0]->needsAdmin) {
+            $admins = array('marlinc', 'adrenaline');
+            if (strtolower($whois->event->target) != '#botlife.team') {
+                return;
+            }
+            if (!in_array(strtolower($whois->event->auth), $admins)) {
+                return;
+            }
         }
         
         $identifiers = \Ircbot\Application::getInstance()

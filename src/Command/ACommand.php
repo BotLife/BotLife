@@ -7,6 +7,7 @@ abstract class ACommand
 
     public $needsSpamfilter = true;
     public $needsAuth       = false;
+    public $needsAdmin      = false;
     
     public function __construct()
     {
