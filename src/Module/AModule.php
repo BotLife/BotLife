@@ -67,6 +67,7 @@ class AModule extends \Ircbot\Module\AModule
             $hash = md5($event->mask->nickname . ';' . $event->botId);
             $whoises->$hash->event = $event;
             $whoises->$hash->callback = array($command, $command->action);
+            $whoises->$hash->event->matchesB = $event->matches;
             \Botlife\Application\Storage::saveData('whois-db', $whoises);
         } else {
             call_user_func(array($command, $command->action), $event);
@@ -103,6 +104,8 @@ class AModule extends \Ircbot\Module\AModule
         $identifiers->botId = $whois->event->botId;
         \Ircbot\Utility\String::tokenize($whois->event->message);
         $identifiers->set($whois->event->getIdentifiers());
+        
+        $whois->event->matches = $whois->event->matchesB;
         
         call_user_func($whois->callback, $whois->event);
     }
