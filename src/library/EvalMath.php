@@ -94,7 +94,11 @@ class EvalMath {
     var $v = array('e'=>2.71,'pi'=>3.14); // variables (and constants)
     var $f = array(); // user-defined functions
     var $vb = array('e', 'pi'); // constants
-    var $fb = array();
+    var $fb = array(  // built-in functions
+        'sin','sinh','arcsin','asin','arcsinh','asinh',
+        'cos','cosh','arccos','acos','arccosh','acosh',
+        'tan','tanh','arctan','atan','arctanh','atanh',
+        'sqrt','abs','ln','log');
     
     function EvalMath() {
         // make the variables a little more accurate
@@ -323,8 +327,7 @@ class EvalMath {
                     if (is_null($op1 = $stack->pop())) return $this->trigger("internal error");
                     $fnn = preg_replace("/^arc/", "a", $fnn); // for the 'arc' trig synonyms
                     if ($fnn == 'ln') $fnn = 'log';
-                    var_dump('$stack->push(\BotLife\Utility\Math::' . $fnn . '($op1));');
-                    eval('$stack->push(\BotLife\Utility\Math::' . $fnn . '($op1));'); // perfectly safe eval()
+                    eval('$stack->push(' . $fnn . '($op1));'); // perfectly safe eval()
                 } elseif (array_key_exists($fnn, $this->f)) { // user function
                     // get args
                     $args = array();
@@ -379,6 +382,7 @@ class EvalMathStack {
     }
     
     function last($n=1) {
-        return @$this->stack[$this->count-$n];
+        return $this->stack[$this->count-$n];
     }
 }
+
