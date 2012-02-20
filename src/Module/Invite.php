@@ -21,6 +21,7 @@ class Invite extends AModule
     
     public function channelReady($event)
     {
+        $c       = new \Botlife\Application\Colors;
         $invites = \Botlife\Application\Storage::loadData('invites');
         $hash    = md5(\Ircbot\token('0'));
         if (!isset($invites->$hash)) {
@@ -36,6 +37,17 @@ class Invite extends AModule
             );
             return;
         } 
+        \Ircbot\Application::getInstance()->getEventHandler()
+            ->raiseEvent(
+                'inviteSucceed', array(\Ircbot\token('0'), $invite)
+            );
+        \Ircbot\msg(
+            \Ircbot\token('0'),
+            $c(12, 'Hello there I\'m ') . $c(3, $event->target)
+                . $c(12, '. I was invited to ') . $c(3, \Ircbot\token('0'))
+                . $c(12, ' by ') . $c(3, $invite->mask->nickname)
+                . $c(12, '. Don\'t want me here? Just kick me out!')
+        );
     }
 
 }

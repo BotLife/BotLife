@@ -7,7 +7,8 @@ class Admin extends AModule
 
     public $events = array(
         'spamfilterCaughtHost',
-        'spamfilterCaughtChannel'
+        'spamfilterCaughtChannel',
+        'inviteSucceed',
     );
     public $commands = array(
         '\Botlife\Command\Admin\Spamfilter',
@@ -31,6 +32,16 @@ class Admin extends AModule
             '#BotLife.Team',
             'Caught user ' . $command->mask . ' in ' . $channel . ' for '
                 . 'flooding command ' . $command->message . '.'
+        );
+    }
+    
+    public function inviteSucceed($data)
+    {
+        list($channel, $invite) = $data;
+        \Ircbot\Msg(
+            '#BotLife.Team',
+            'Got invited to ' . $channel . ' by ' . $invite->mask->nickname
+                 . '.'
         );
     }
 
