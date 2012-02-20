@@ -34,6 +34,9 @@ class Invite extends AModule
     
     public function onKick($event)
     {
+        if ($event->user != 'BotLife') {
+            return;
+        }
         $invites = \Botlife\Application\Storage::loadData('invites');
         foreach ($invites->channels as $channel => $options) {
             if (strtolower($channel) == strtolower($event->channel)) {
