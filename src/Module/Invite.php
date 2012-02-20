@@ -8,6 +8,7 @@ class Invite extends AModule
     public $events = array(
         'onInvite',
         'channelReady',
+        'onKick',
         'onConnect'      => 'joinChannels',
     );
 
@@ -29,6 +30,21 @@ class Invite extends AModule
         }
         $channels = implode(',', array_keys($invites->channels));
         \Ircbot\joinChan($channels);
+    }
+    
+    public function onKick($event)
+    {
+        $invites = \Botlife\Application\Storage::loadData('invites');
+        foreach ($invites->channels as $channel => $options) {
+            if (strtolower($channel) == strtolower($event->channel)) {
+                unset($invites->channels[$channel]);
+            }
+        }
+        \Ircbot\Application::getInstance()->getEventHandler()
+            ->raiseEvent(
+                'inviteForgetKick', array($event->channel, $event)
+            );
+        \Botlife\Application\Storage::saveData('invites', $invites);
     }
 
     public function onInvite($event)
