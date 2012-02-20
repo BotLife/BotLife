@@ -7,13 +7,17 @@ class Math
 
     public $units = array('k', 'm', 'b', 't');
 
+    private $_math;
+
     public function evaluate($formula)
     {
-        $math = new \EvalMath; 
-        foreach ($this->units as $key => $unit) {
-            $math->v[$unit] = pow(1000, $key + 1);
+        if (!$this->_math) {
+            $this->_math = new \EvalMath; 
         }
-        return $math->evaluate($formula);
+        foreach ($this->units as $key => $unit) {
+            $this->_math->v[$unit] = pow(1000, $key + 1);
+        }
+        return $this->_math->evaluate($formula);
     }
     
     public function alphaRound($val, $precision = 2)
