@@ -6,7 +6,7 @@ class Translate extends ACommand
 {
 
     public $regex = array(
-        '/^[.@!]translate (?P<from>[a-zA-Z]{2})(\|| )(?P<to>[a-zA-Z]{2}) (?P<text>.*)$/i',
+        '/^[.@!]translate(?P<langs> (?P<from>[a-zA-Z]{2})(\|| )(?P<to>[a-zA-Z]{2}))?( (?P<text>.*))?$/i',
     );
     public $action = 'translate';
     
@@ -14,6 +14,25 @@ class Translate extends ACommand
 
     public function translate($event)
     {
+        $c = new \Botlife\Application\Colors;
+        if (!isset($event->matches['langs'])) {
+            \Ircbot\Notice(
+                $event->mask->nickname,
+                $c(12, '[') . $c(3, 'TRANS') . $c(12, '] ')
+                    . $c(12, 'You need to specify two languages. For example: ')
+                    . $c(3, '!translate nl en Hoe gaat het?')
+            );  
+            return;
+        }
+        if (!isset($event->matches['text'])) {
+            \Ircbot\Notice(
+                $event->mask->nickname,
+                $c(12, '[') . $c(3, 'TRANS') . $c(12, '] ')
+                    . $c(12, 'You need to specify a text. For example: ')
+                    . $c(3, '!translate nl en Hoe gaat het?')
+            );  
+            return;
+        }
         if (!in_array(strtolower($event->matches['from']), $this->languages)) {
             $msg = 'The language you\'re trying to translate from isn\'t supported';
             \Ircbot\notice(

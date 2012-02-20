@@ -10,13 +10,23 @@ class Calc extends ACommand
     const ERR_INTERNALERROR = 4;
     const ERR_UNDEFINEDVARIABLE = 8;
     
-    public $regex = '/^([.!@]calc |`)(?P<exp>.+)$/';
+    public $regex = '/^([.!@]calc( )?|`)(?P<exp>.+)?$/';
     public $action = 'calc';
     
     public $lastCalcErrors = 0;
     
     public function calc($event)
     {
+        $c = new \Botlife\Application\Colors;
+        if (!isset($event->matches['exp'])) {
+            \Ircbot\Notice(
+                $event->mask->nickname,
+                $c(12, '[') . $c(3, 'CALC') . $c(12, '] ')
+                    . $c(12, 'You need to specify a expression. For example: ')
+                    . $c(3, '!calc 5^3')
+            );  
+            return;
+        }
         $cache = \Botlife\Application\Storage::loadData('math-calc');
         if (!isset($cache->data)) {
             $cache->data = array();
@@ -31,7 +41,7 @@ class Calc extends ACommand
         } else {
             $data = $cache->data[$exp];
         }
-        $response = '[Calc] ';
+        $response = $c(12, '[') . $c(3, 'CALC') . $c(12, '] ');
         if (is_numeric($data)) {
             $response .= $exp . ' = ' . number_format($data, 2, ',', '.') . ' (' . $math->alphaRound($data) . ')';
         } else {
