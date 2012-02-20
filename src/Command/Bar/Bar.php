@@ -42,10 +42,10 @@ class Bar extends \Botlife\Command\ACommand
             );
             return;
         }
-        $bars = round(rand(1, 56) * 10.3, 0);
+        $bars = round(mt_rand(1, 5) * 100 * 0.63, 0);
         $user->bars = $user->bars + $bars;
         $user->lastPlayed = time();
-        $user->waitTime   = round(rand(1,56) * 130.7, 0);
+        $user->waitTime   = round(mt_rand(5, 15) * 60 * 0.91, 0);
         \Ircbot\Notice(
             $event->mask->nickname,
             $this->getMessage($event->mask->nickname, $bars) . ' '
