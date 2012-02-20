@@ -9,6 +9,7 @@ class Misc extends AModule
         '\Botlife\Command\Translate',
         '\Botlife\Command\YouTube',
         '\Botlife\Command\EightBall',
+        '\Botlife\Command\Misc\NineGag',
     );
 
 }
