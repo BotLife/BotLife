@@ -54,12 +54,14 @@ class Calc extends ACommand
                 . $c(3, '!calc') . $c(12, '.');
             $math->evaluate($exp);
         } else {
-            if (!isset($calc->cache[$exp])) {
+            /*if (!isset($calc->cache[$exp])) {
                 $data = $math->evaluate($exp);
                 $calc->cache[$exp] = $data;
             } else {
                 $data = $calc->cache[$exp];
-            }
+            }*/
+            $data = $math->evaluate($exp);
+            $math->setConstant('ans', $data);
             if (is_numeric($data)) {
                 $response .= $c(3, $exp) . $c(12, ' = ')
                     . $c(3, number_format($data, 2, ',', '.')) . $c(12, ' (')

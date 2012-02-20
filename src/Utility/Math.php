@@ -20,6 +20,14 @@ class Math
         return $this->_math->evaluate($formula);
     }
     
+    public function setConstant($key, $value)
+    {
+        $this->_math->v[$key] = $value;
+        if (!in_array($key, $this->_math->vb)) {
+            $this->_math->vb[] = $key;
+        }
+    }
+    
     public function alphaRound($val, $precision = 2)
     {
         if ($val < 1000) {
