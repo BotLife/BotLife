@@ -10,7 +10,7 @@ class Calc extends ACommand
     const ERR_INTERNALERROR = 4;
     const ERR_UNDEFINEDVARIABLE = 8;
     
-    public $regex = '/^([.!@]calc( )?|`)(?P<exp>.+)?$/';
+    public $regex = '/^([.!@](?P<type>calc|eval)( )?|`)(?P<exp>.+)?$/';
     public $action = 'calc';
     
     public $lastCalcErrors = 0;
@@ -27,48 +27,68 @@ class Calc extends ACommand
             );  
             return;
         }
-        $cache = \Botlife\Application\Storage::loadData('math-calc');
-        if (!isset($cache->data)) {
-            $cache->data = array();
+        $calc = \Botlife\Application\Storage::loadData('math-calc');
+        if (!isset($calc->cache)) {
+            $calc->cache = array();
         }
         $time = array($this->measureTime());
+        
+        if (isset($event->matches['type'])) {
+            $type = $event->matches['type'];
+        } else {
+            $type = 'calc';
+        }
+        $type = strtoupper($type);
+        $hash = md5($event->mask->nickname);
+        if (isset($calc->exp->$hash)) {
+            $math = $calc->exp->$hash;
+        } else {
+            $math = new \Botlife\Utility\Math;
+        }
+        set_error_handler(array($this, 'handleErrors'));
         $exp = $event->matches['exp'];
-        $math = new \Botlife\Utility\Math;
-        if (!isset($cache->data[$exp])) {
-            set_error_handler(array($this, 'handleErrors'));
-            $data = $math->evaluate($exp);
-            $cache->data[$exp] = $data;
-        } else {
-            $data = $cache->data[$exp];
-        }
-        $c        = new \Botlife\Application\Colors;
         $response = $c(12, '[') . $c(3, 'CALC') . $c(12, '] ');
-        if (is_numeric($data)) {
-            $response .= $c(3, $exp) . $c(12, ' = ')
-                . $c(3, number_format($data, 2, ',', '.')) . $c(12, ' (')
-                . $c(3, $math->alphaRound($data)) . $c(12, ')');
+        if ($type == 'EVAL') {
+            $response .= $c(12, 'Executed expression: ') . $c(3, $exp)
+                . $c(12, '. ') . $c(12, 'You can now use your expression in ')
+                . $c(3, '!calc') . $c(12, '.');
+            $math->evaluate($exp);
         } else {
-            $response .= 'Could not execute your expression because ';
-            if ($this->lastCalcErrors & self::ERR_DEVIDEBYZERO) {
-                $response .= 'you tried to divide by zero.';
-            } elseif ($this->lastCalcErrors & self::ERR_SQRTNEGATIVE) {
-                $response .= 'you tried to do a square root with a negative number.';
-            } elseif ($this->lastCalcErrors & self::ERR_INTERNALERROR) {
-                $response .= 'of a internet error.';
-            } elseif ($this->lastCalcErrors & self::ERR_UNDEFINEDVARIABLE) {
-                $response .= 'you defined a unknown variable.';
+            /*if (!isset($calc->cache[$exp])) {
+                $data = $math->evaluate($exp);
+                $calc->cache[$exp] = $data;
             } else {
-                $response .= 'of a unknown error.';
-            }
+                $data = $calc->cache[$exp];
+            }*/
+            $data = $math->evaluate($exp);
+            $math->setConstant('ans', $data);
+            if (is_numeric($data)) {
+                $response .= $c(3, $exp) . $c(12, ' = ')
+                    . $c(3, number_format($data, 2, ',', '.')) . $c(12, ' (')
+                    . $c(3, $math->alphaRound($data)) . $c(12, ')');
+            } else {
+                $response .= 'Could not execute your expression because ';
+                if ($this->lastCalcErrors & self::ERR_DEVIDEBYZERO) {
+                    $response .= 'you tried to divide by zero.';
+                } elseif ($this->lastCalcErrors & self::ERR_SQRTNEGATIVE) {
+                    $response .= 'you tried to do a square root with a negative number.';
+                } elseif ($this->lastCalcErrors & self::ERR_INTERNALERROR) {
+                    $response .= 'of a internet error.';
+                } elseif ($this->lastCalcErrors & self::ERR_UNDEFINEDVARIABLE) {
+                    $response .= 'you defined a unknown variable.';
+                } else {
+                    $response .= 'of a unknown error.';
+                }
+            }        
         }
+        $calc->exp->$hash = $math;
         $time[] = $this->measureTime();
         \Ircbot\msg(
             $event->target,
-            $response . $c(12, '(')
-                . $c(3, round(($time[1] - $time[0]) * 1000, 2) . 'ms')
-                . $c(12, ')')
+            $response . $c(12, ' (')
+                . $c(3, round(($time[1] - $time[0]) * 1000, 2)) . $c(12, 'ms)')
         );
-        \Botlife\Application\Storage::saveData('math-calc', $cache);
+        \Botlife\Application\Storage::saveData('math-calc', $calc);
         restore_error_handler();
         $this->lastCalcErrors = 0;
     }
