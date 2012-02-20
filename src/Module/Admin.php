@@ -7,7 +7,9 @@ class Admin extends AModule
 
     public $events = array(
         'spamfilterCaughtHost',
-        'spamfilterCaughtChannel'
+        'spamfilterCaughtChannel',
+        'inviteSucceed',
+        'inviteForgetKick',
     );
     public $commands = array(
         '\Botlife\Command\Admin\Spamfilter',
@@ -31,6 +33,26 @@ class Admin extends AModule
             '#BotLife.Team',
             'Caught user ' . $command->mask . ' in ' . $channel . ' for '
                 . 'flooding command ' . $command->message . '.'
+        );
+    }
+    
+    public function inviteSucceed($data)
+    {
+        list($channel, $invite) = $data;
+        \Ircbot\Msg(
+            '#BotLife.Team',
+            'Got invited to ' . $channel . ' by ' . $invite->mask->nickname
+                 . '.'
+        );
+    }
+    
+    public function inviteForgetKick($data)
+    {
+        list($channel, $event) = $data;
+        \Ircbot\Msg(
+            '#BotLife.Team',
+            'Got kicked from ' . $channel . ' by ' . $event->source
+                 . '. Removed channel from autojoin.'
         );
     }
 
