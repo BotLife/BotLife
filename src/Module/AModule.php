@@ -15,6 +15,11 @@ class AModule extends \Ircbot\Module\AModule
     {
         \Ircbot\Application::getInstance()->getModuleHandler()
             ->addModuleByObject($this);
+        $commands = \Botlife\Application\Storage::loadData('commands');
+        if (!isset($commands->data)) {
+            $commands->data = array();
+        }
+        \Botlife\Application\Storage::saveData('commands', $commands);
         foreach ($this->commands as $command) {
             $command = new $command;
             if (is_array($command->regex)) {
@@ -40,7 +45,12 @@ class AModule extends \Ircbot\Module\AModule
     
     public function callback($event)
     {
-        list($event, $command) = $event;        
+        list($event, $command) = $event; 
+        $commands = \Botlife\Application\Storage::loadData('commands');
+        if (!$commands->data[get_class($command)]->enabled) {
+            \Ircbot\notice($event->mask->nickname, 'This command is disabled');
+            return;
+        }
         if ($command->needsSpamfilter) {
             $spamfilter = new \Botlife\Application\Spamfilter;
             if (!$spamfilter->checkCommand($event)) {
