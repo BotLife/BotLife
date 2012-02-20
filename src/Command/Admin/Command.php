@@ -6,7 +6,7 @@ class Command extends \Botlife\Command\ACommand
 {
 
     public $regex     = array(
-        '/^COMMAND (?P<option>DISABLE|ENABLE) (?P<command>.+)$/i',
+        '/^COMMAND( )?(?P<option>DISABLE|ENABLE|STATUS)?/i',
     );
     public $action    = 'run';
     public $needsAuth = true;
@@ -19,10 +19,14 @@ class Command extends \Botlife\Command\ACommand
         if (!in_array(strtolower($event->auth), array('marlinc', 'adrenaline'))) {
             return;
         }
-        $option = strtoupper($event->matches['option']);
+        if (isset($event->matches['option'])) {
+            $option = strtoupper($event->matches['option']);
+        } else {
+            $option = 'STATUS';
+        }
         if ($option == 'DISABLE') {
             $commands = \Botlife\Application\Storage::loadData('commands');
-            $command = 'Botlife\Command\\' . $event->matches['command'];
+            $command = 'Botlife\Command\\' . \Ircbot\token('2');
             if (!in_array($command, get_declared_classes())) {
                 \Ircbot\msg(
                     '#BotLife.Team',
@@ -39,7 +43,7 @@ class Command extends \Botlife\Command\ACommand
             
         } elseif ($option == 'ENABLE') {
             $commands = \Botlife\Application\Storage::loadData('commands');
-            $command = 'Botlife\Command\\' . $event->matches['command'];
+            $command = 'Botlife\Command\\' . \Ircbot\token('2');
             if (!in_array($command, get_declared_classes())) {
                 \Ircbot\msg(
                     '#BotLife.Team',
@@ -53,6 +57,18 @@ class Command extends \Botlife\Command\ACommand
                     'Enabled command ' . $command . '.' 
             );
             \Botlife\Application\Storage::saveData('commands', $commands);
+        } elseif ($option == 'STATUS') {
+            $commands = \Botlife\Application\Storage::loadData('commands');
+            $amountEnabled = 0;
+            foreach ($commands->data as $command => $options) {
+                if ($options->enabled) {
+                    ++$amountEnabled;
+                }
+            }
+            \Ircbot\msg(
+                '#Botlife.Team',
+                $amountEnabled . '\\' . count($commands->data) . ' enabled'
+            );
         }
     }
 
