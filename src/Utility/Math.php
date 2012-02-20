@@ -7,14 +7,25 @@ class Math
 
     public $units = array('k', 'm', 'b', 't');
 
+    private $_math;
+
     public function evaluate($formula)
     {
-        $math = new \EvalMath; 
-        $math->fb = array('abs', 'sqrt');
-        foreach ($this->units as $key => $unit) {
-            $math->v[$unit] = pow(1000, $key + 1);
+        if (!$this->_math) {
+            $this->_math = new \EvalMath; 
         }
-        return $math->evaluate($formula);
+        foreach ($this->units as $key => $unit) {
+            $this->_math->v[$unit] = pow(1000, $key + 1);
+        }
+        return $this->_math->evaluate($formula);
+    }
+    
+    public function setConstant($key, $value)
+    {
+        $this->_math->v[$key] = $value;
+        if (!in_array($key, $this->_math->vb)) {
+            $this->_math->vb[] = $key;
+        }
     }
     
     public function alphaRound($val, $precision = 2)

@@ -26,6 +26,7 @@ class Bootstrap
         new AuthModule;
         new AdminModule;
         new \Botlife\Module\Bar;
+        new \Botlife\Module\Invite;
     }
     
     public function initBot()
