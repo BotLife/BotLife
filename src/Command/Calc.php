@@ -41,9 +41,12 @@ class Calc extends ACommand
         } else {
             $data = $cache->data[$exp];
         }
+        $c        = new \Botlife\Application\Colors;
         $response = $c(12, '[') . $c(3, 'CALC') . $c(12, '] ');
         if (is_numeric($data)) {
-            $response .= $exp . ' = ' . number_format($data, 2, ',', '.') . ' (' . $math->alphaRound($data) . ')';
+            $response .= $c(3, $exp) . $c(12, ' = ')
+                . $c(3, number_format($data, 2, ',', '.')) . $c(12, ' (')
+                . $c(3, $math->alphaRound($data)) . $c(12, ')');
         } else {
             $response .= 'Could not execute your expression because ';
             if ($this->lastCalcErrors & self::ERR_DEVIDEBYZERO) {
@@ -59,7 +62,12 @@ class Calc extends ACommand
             }
         }
         $time[] = $this->measureTime();
-        \Ircbot\msg($event->target, $response . '(' . round(($time[1] - $time[0]) * 1000, 2) . 'ms)');
+        \Ircbot\msg(
+            $event->target,
+            $response . $c(12, '(')
+                . $c(3, round(($time[1] - $time[0]) * 1000, 2) . 'ms')
+                . $c(12, ')')
+        );
         \Botlife\Application\Storage::saveData('math-calc', $cache);
         restore_error_handler();
         $this->lastCalcErrors = 0;
