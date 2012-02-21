@@ -103,7 +103,7 @@ class AModule extends \Ircbot\Module\AModule
             $whois->event->auth = null;
         }
         if ($whois->command->needsAdmin) {
-            $admins = array('marlinc', 'adrenaline');
+            $admins = array('marlinc', 'adrenaline', 'classicrock');
             if (strtolower($whois->event->target) != '#botlife.team') {
                 return;
             }
