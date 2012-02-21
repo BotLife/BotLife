@@ -69,11 +69,12 @@ class AModule extends \Ircbot\Module\AModule
             );
             $hash = md5($event->mask->nickname . ';' . $event->botId);
             $whoises->$hash->event = $event;
-            $whoises->$hash->callback = array($command, $command->action);
+            $whoises->$hash->command = $command;
             $whoises->$hash->event->matchesB = $event->matches;
             \Botlife\Application\Storage::saveData('whois-db', $whoises);
         } else {
-            call_user_func(array($command, $command->action), $event);
+            $class = new $command;
+            $this->callCommand($command, $event);
         }
     }
     
@@ -101,7 +102,7 @@ class AModule extends \Ircbot\Module\AModule
         } else {
             $whois->event->auth = null;
         }
-        if ($whois->callback[0]->needsAdmin) {
+        if ($whois->command->needsAdmin) {
             $admins = array('marlinc', 'adrenaline');
             if (strtolower($whois->event->target) != '#botlife.team') {
                 return;
@@ -119,7 +120,20 @@ class AModule extends \Ircbot\Module\AModule
         
         $whois->event->matches = $whois->event->matchesB;
         
-        call_user_func($whois->callback, $whois->event);
+        $this->callCommand($whois->command, $whois->event);
+    }
+    
+    public function callCommand($command, $event)
+    {
+        $command->{$command->action}($event);
+        foreach ($command->responses as $response) {
+            if ($command->responseType == $command::RESPONSE_PUBLIC) {
+                \Ircbot\msg($event->target, $response);
+            } elseif ($command->responseType == $command::RESPONSE_PRIVATE) {
+                \Ircbot\notice($event->mask->nickname, $response);
+            } 
+        }
+        $command->responses = array();
     }
 
 }
