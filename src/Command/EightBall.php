@@ -17,6 +17,7 @@ class EightBall extends ACommand
     
     public function run($event)
     {
+        $this->detectResponseType($event->message);
         $c = new \Botlife\Application\Colors;
         
         if (!isset($event->matches['question'])) {

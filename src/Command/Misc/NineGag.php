@@ -6,12 +6,14 @@ class NineGag extends \Botlife\Command\ACommand
 {
 
     public $regex  = array(
-        '/^[.!]9(gag)?$/i'
+        '/^[.!@]9(gag)?$/i'
     );
     public $action = 'run';
     
     public function run($event)
     {
+        $this->detectResponseType($event->message);
+        
         $posts = $this->getPosts();
         $c = new \Botlife\Application\Colors;
         $this->respond(

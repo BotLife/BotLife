@@ -13,6 +13,7 @@ class Bar extends \Botlife\Command\ACommand
     
     public function run($event)
     {
+        $this->detectResponseType($event->message);
         if (!$event->auth) {
             $this->respond(
                 'In order to you bar you need to be logged in to NickServ'
