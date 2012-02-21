@@ -16,8 +16,7 @@ class Translate extends ACommand
     {
         $c = new \Botlife\Application\Colors;
         if (!isset($event->matches['langs'])) {
-            \Ircbot\Notice(
-                $event->mask->nickname,
+            $this->respond(
                 $c(12, '[') . $c(3, 'TRANS') . $c(12, '] ')
                     . $c(12, 'You need to specify two languages. For example: ')
                     . $c(3, '!translate nl en Hoe gaat het?')
@@ -25,8 +24,7 @@ class Translate extends ACommand
             return;
         }
         if (!isset($event->matches['text'])) {
-            \Ircbot\Notice(
-                $event->mask->nickname,
+            $this->respond(
                 $c(12, '[') . $c(3, 'TRANS') . $c(12, '] ')
                     . $c(12, 'You need to specify a text. For example: ')
                     . $c(3, '!translate nl en Hoe gaat het?')
@@ -35,16 +33,14 @@ class Translate extends ACommand
         }
         if (!in_array(strtolower($event->matches['from']), $this->languages)) {
             $msg = 'The language you\'re trying to translate from isn\'t supported';
-            \Ircbot\notice(
-                $event->mask->nickname,
+            $this->respond(
                 $this->styleMessage($msg)
             );
             return;
         }
         if (!in_array(strtolower($event->matches['to']), $this->languages)) {
             $msg = 'The language you\'re trying to translate to isn\'t supported';
-            \Ircbot\notice(
-                $event->mask->nickname,
+            $this->respond(
                 $this->styleMessage($msg)
             );
             return;
@@ -55,14 +51,13 @@ class Translate extends ACommand
         );
         if (!$response) {
             $msg = 'Could not translate your text';
-            \Ircbot\notice(
-                $event->mask->nickname,
+            $this->respond(
                 $this->styleMessage($msg)
             );
             return;
         }
         $msg = $response;
-        \Ircbot\notice($event->mask->nickname, $this->styleMessage($msg));
+        $this->respond($this->styleMessage($msg));
     }
     
     public function styleMessage($text)

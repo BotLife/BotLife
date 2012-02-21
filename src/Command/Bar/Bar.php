@@ -14,8 +14,7 @@ class Bar extends \Botlife\Command\ACommand
     public function run($event)
     {
         if (!$event->auth) {
-            \Ircbot\Notice(
-                $event->mask->nickname,
+            $this->respond(
                 'In order to you bar you need to be logged in to NickServ'
             );
             return;
@@ -35,8 +34,7 @@ class Bar extends \Botlife\Command\ACommand
         }
         if (($user->lastPlayed + $user->waitTime) > time()) {
             $waitTime = ($user->lastPlayed + $user->waitTime) - time();
-            \Ircbot\Notice(
-                $event->mask->nickname,
+            $this->respond(
                 'You still need to wait ' . gmdate('i:s', $waitTime)
                     . ' seconds before you can use bar again'
             );
@@ -46,8 +44,7 @@ class Bar extends \Botlife\Command\ACommand
         $user->bars = $user->bars + $bars;
         $user->lastPlayed = time();
         $user->waitTime   = round(mt_rand(5, 15) * 60 * 0.91, 0);
-        \Ircbot\Notice(
-            $event->mask->nickname,
+        $this->respond(
             $this->getMessage($event->mask->nickname, $bars) . ' '
                 . 'You now have ' . $user->bars . ' bars.'
         );

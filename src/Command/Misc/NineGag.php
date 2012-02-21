@@ -14,8 +14,7 @@ class NineGag extends \Botlife\Command\ACommand
     {
         $posts = $this->getPosts();
         $c = new \Botlife\Application\Colors;
-        \Ircbot\notice(
-            $event->mask->nickname,
+        $this->respond
             $c(12, '[') . $c(3, '9GAG') . $c(12, '] ')
                 . $c(12, 'Title: ') . $c(3, $posts[0]->title) . $c(12, ' - ')
                 . $c(12, 'Link: ') . $c(3, $posts[0]->link)
