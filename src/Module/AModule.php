@@ -35,7 +35,7 @@ class AModule extends \Ircbot\Module\AModule
     public function prepareCallback($command, $regex)
     {
         $cmdHandler = \Ircbot\Application::getInstance()->getUserCommandHandler()
-            ->setDefaultMsgType(TYPE_CHANMSG)
+            ->setDefaultMsgType(TYPE_MSG)
             ->setDefaultScanType(IRCBOT_USERCMD_SCANTYPE_REGEX);
         $cmdHandler->addCommand(
             array($this, 'callback'), $regex, $cmdHandler->defaultMsgType,
@@ -127,11 +127,15 @@ class AModule extends \Ircbot\Module\AModule
     {
         $command->{$command->action}($event);
         foreach ($command->responses as $response) {
-            if ($command->responseType == $command::RESPONSE_PUBLIC) {
-                \Ircbot\msg($event->target, $response);
-            } elseif ($command->responseType == $command::RESPONSE_PRIVATE) {
-                \Ircbot\notice($event->mask->nickname, $response);
-            } 
+            if (substr($event->target, 0, 1) == '#') {
+                if ($command->responseType == $command::RESPONSE_PUBLIC) {
+                    \Ircbot\msg($event->target, $response);
+                } elseif ($command->responseType == $command::RESPONSE_PRIVATE) {
+                    \Ircbot\notice($event->mask->nickname, $response);
+                } 
+            } else {
+                \Ircbot\msg($event->mask->nickname, $response);
+            }
         }
         $command->responses = array();
     }
