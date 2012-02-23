@@ -34,8 +34,13 @@ class AModule extends \Ircbot\Module\AModule
     
     public function prepareCallback($command, $regex)
     {
+        if ($command->needsOp) {
+            $messageType = TYPE_CHANMSG;
+        } else {
+            $messageType = TYPE_MSG;
+        }
         $cmdHandler = \Ircbot\Application::getInstance()->getUserCommandHandler()
-            ->setDefaultMsgType(TYPE_MSG)
+            ->setDefaultMsgType($messageType)
             ->setDefaultScanType(IRCBOT_USERCMD_SCANTYPE_REGEX);
         $cmdHandler->addCommand(
             array($this, 'callback'), $regex, $cmdHandler->defaultMsgType,
@@ -47,9 +52,26 @@ class AModule extends \Ircbot\Module\AModule
     {
         list($event, $command) = $event; 
         $commands = \Botlife\Application\Storage::loadData('commands');
+        $channels = \Botlife\Application\Storage::loadData('channels');
         if (!$commands->data[get_class($command)]->enabled) {
             \Ircbot\notice($event->mask->nickname, 'This command is disabled');
             return;
+        }
+        if (substr($event->target, 0, 1) == '#') {
+            $channel = \Ircbot\Application::getInstance()->getChannelHandler()
+                ->getChan($event->target, $event->botId);
+            if (!$channels[strtolower($event->target)]
+                ->commands[strtolower($command->code)]->enabled) {
+                \Ircbot\notice($event->mask->nickname, 'This command is disabled');
+                return;
+            }    
+            if ($command->needsOp && !$channel->isOp($event->mask->nickname)) {
+                \Ircbot\notice(
+                    $event->mask->nickname,
+                    'You need to be op to use this command.'
+                );
+                return;
+            }
         }
         if ($command->needsAdmin) {
             $command->needsAuth = true;

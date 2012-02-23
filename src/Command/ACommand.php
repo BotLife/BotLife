@@ -8,9 +8,13 @@ abstract class ACommand
     const RESPONSE_PUBLIC   = 1;
     const RESPONSE_PRIVATE  = 2;
 
+    public $code            = null;
+    public $action          = 'run';
+
     public $needsSpamfilter = true;
     public $needsAuth       = false;
     public $needsAdmin      = false;
+    public $needsOp         = false;
     
     public $responseSymbols = array(
         self::RESPONSE_PUBLIC  => array('@'),
