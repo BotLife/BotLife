@@ -9,6 +9,7 @@ class NineGag extends \Botlife\Command\ACommand
         '/^[.!@]9(gag)?$/i'
     );
     public $action = 'run';
+    public $code   = '9gag';
     
     public function run($event)
     {

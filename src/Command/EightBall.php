@@ -7,6 +7,7 @@ class EightBall extends ACommand
 
     public $regex  = '/^[.!@]8(ball)?( (?P<question>.*))?$/i';
     public $action = 'run';
+    public $code   = '8ball';
     
     public $answers = array(
         'Yes!',

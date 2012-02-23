@@ -12,6 +12,8 @@ class Calc extends ACommand
     
     public $regex = '/^([.!@](?P<type>calc|eval)( )?|`)(?P<exp>.+)?$/';
     public $action = 'calc';
+    public $code   = 'calc';
+    
     
     public $lastCalcErrors = 0;
     

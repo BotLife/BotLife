@@ -9,6 +9,8 @@ class Bar extends \Botlife\Command\ACommand
         '/^[.!]bar$/i',
     );
     public $action    = 'run';
+    public $code      = 'bar';
+    
     public $needsAuth = true;
     
     public function run($event)

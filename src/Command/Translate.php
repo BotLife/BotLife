@@ -9,6 +9,7 @@ class Translate extends ACommand
         '/^[.@!]translate(?P<langs> (?P<from>[a-zA-Z]{2})(\|| )(?P<to>[a-zA-Z]{2}))?( (?P<text>.*))?$/i',
     );
     public $action = 'translate';
+    public $code   = 'translate';
     
     public $languages = array('nl', 'en');
 
