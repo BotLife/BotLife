@@ -10,6 +10,8 @@ class YouTube extends ACommand
     );
     public $action = 'lookup';
     
+    public $responseType    = self::RESPONSE_PUBLIC;
+    
     private $_lastrun;
     
     public function lookup($event)
