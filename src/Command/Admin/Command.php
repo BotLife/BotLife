@@ -28,7 +28,7 @@ class Command extends \Botlife\Command\ACommand
                 );
                 return;
             }
-            $commands->data[$command]->enabled = false;
+            $commands[$command]->enabled = false;
             \Ircbot\msg(
                     '#BotLife.Team',
                     'Disabled command ' . $command . '.' 
@@ -45,7 +45,7 @@ class Command extends \Botlife\Command\ACommand
                 );
                 return;
             }
-            $commands->data[$command]->enabled = true;
+            $commands[$command]->enabled = true;
             \Ircbot\msg(
                     '#BotLife.Team',
                     'Enabled command ' . $command . '.' 
@@ -54,14 +54,14 @@ class Command extends \Botlife\Command\ACommand
         } elseif ($option == 'STATUS') {
             $commands = \Botlife\Application\Storage::loadData('commands');
             $amountEnabled = 0;
-            foreach ($commands->data as $command => $options) {
+            foreach ($commands as $command => $options) {
                 if ($options->enabled) {
                     ++$amountEnabled;
                 }
             }
             \Ircbot\msg(
                 '#Botlife.Team',
-                $amountEnabled . '\\' . count($commands->data) . ' enabled'
+                $amountEnabled . '\\' . count($commands) . ' enabled'
             );
         }
     }

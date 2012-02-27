@@ -16,9 +16,6 @@ class AModule extends \Ircbot\Module\AModule
         \Ircbot\Application::getInstance()->getModuleHandler()
             ->addModuleByObject($this);
         $commands = \Botlife\Application\Storage::loadData('commands');
-        if (!isset($commands->data)) {
-            $commands->data = array();
-        }
         \Botlife\Application\Storage::saveData('commands', $commands);
         foreach ($this->commands as $command) {
             $command = new $command;
@@ -53,7 +50,7 @@ class AModule extends \Ircbot\Module\AModule
         list($event, $command) = $event; 
         $commands = \Botlife\Application\Storage::loadData('commands');
         $channels = \Botlife\Application\Storage::loadData('channels');
-        if (!$commands->data[get_class($command)]->enabled) {
+        if (!$commands[get_class($command)]->enabled) {
             \Ircbot\notice($event->mask->nickname, 'This command is disabled');
             return;
         }
@@ -126,6 +123,7 @@ class AModule extends \Ircbot\Module\AModule
         }
         if ($whois->command->needsAdmin) {
             $admins = array('marlinc', 'adrenaline', 'classicrock');
+            var_dump($whois->event->target);
             if (strtolower($whois->event->target) != '#botlife.team') {
                 return;
             }
