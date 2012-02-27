@@ -33,7 +33,7 @@ class Command extends \Botlife\Command\ACommand
     public function commandExists($command)
     {
         $commands = \Botlife\Application\Storage::loadData('commands');
-        foreach ($commands->data as $data => $options) {
+        foreach ($commands as $data => $options) {
             $tmp = new $data;
             if (strtolower($tmp->code) == strtolower($command)) {
                 return true;
