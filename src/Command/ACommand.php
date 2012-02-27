@@ -26,12 +26,12 @@ abstract class ACommand
     public function __construct()
     {
         $commands = \Botlife\Application\Storage::loadData('commands');
-        if (!isset($commands->data[get_class($this)])) {
+        if (!isset($commands[get_class($this)])) {
         
             $command = new \StorageObject;
             $command->enabled = true;
             
-            $commands->data[get_class($this)] = $command;
+            $commands[get_class($this)] = $command;
         }
         \Botlife\Application\Storage::saveData('commands', $commands);
     }
