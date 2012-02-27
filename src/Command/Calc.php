@@ -12,6 +12,8 @@ class Calc extends ACommand
     
     public $regex = '/^([.!@](?P<type>calc|eval)( )?|`)(?P<exp>.+)?$/';
     public $action = 'calc';
+    public $code   = 'calc';
+    
     
     public $lastCalcErrors = 0;
     
@@ -19,8 +21,7 @@ class Calc extends ACommand
     {
         $c = new \Botlife\Application\Colors;
         if (!isset($event->matches['exp'])) {
-            \Ircbot\Notice(
-                $event->mask->nickname,
+            $this->respond(
                 $c(12, '[') . $c(3, 'CALC') . $c(12, '] ')
                     . $c(12, 'You need to specify a expression. For example: ')
                     . $c(3, '!calc 5^3')
@@ -83,11 +84,11 @@ class Calc extends ACommand
         }
         $calc->exp->$hash = $math;
         $time[] = $this->measureTime();
-        \Ircbot\msg(
-            $event->target,
+        $this->respond(
             $response . $c(12, ' (')
                 . $c(3, round(($time[1] - $time[0]) * 1000, 2)) . $c(12, 'ms)')
         );
+        $this->detectResponseType($event->message);
         \Botlife\Application\Storage::saveData('math-calc', $calc);
         restore_error_handler();
         $this->lastCalcErrors = 0;

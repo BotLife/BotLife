@@ -2,3 +2,6 @@
 /storage.dat
 *~
 /nbproject/
+/.settings/
+/.buildpath
+/.project

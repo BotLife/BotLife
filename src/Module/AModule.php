@@ -34,8 +34,13 @@ class AModule extends \Ircbot\Module\AModule
     
     public function prepareCallback($command, $regex)
     {
+        if ($command->needsOp) {
+            $messageType = TYPE_CHANMSG;
+        } else {
+            $messageType = TYPE_MSG;
+        }
         $cmdHandler = \Ircbot\Application::getInstance()->getUserCommandHandler()
-            ->setDefaultMsgType(TYPE_CHANMSG)
+            ->setDefaultMsgType($messageType)
             ->setDefaultScanType(IRCBOT_USERCMD_SCANTYPE_REGEX);
         $cmdHandler->addCommand(
             array($this, 'callback'), $regex, $cmdHandler->defaultMsgType,
@@ -47,9 +52,26 @@ class AModule extends \Ircbot\Module\AModule
     {
         list($event, $command) = $event; 
         $commands = \Botlife\Application\Storage::loadData('commands');
+        $channels = \Botlife\Application\Storage::loadData('channels');
         if (!$commands->data[get_class($command)]->enabled) {
             \Ircbot\notice($event->mask->nickname, 'This command is disabled');
             return;
+        }
+        if (substr($event->target, 0, 1) == '#') {
+            $channel = \Ircbot\Application::getInstance()->getChannelHandler()
+                ->getChan($event->target, $event->botId);
+            if (!$channels[strtolower($event->target)]
+                ->commands[strtolower($command->code)]->enabled) {
+                \Ircbot\notice($event->mask->nickname, 'This command is disabled');
+                return;
+            }    
+            if ($command->needsOp && !$channel->isOp($event->mask->nickname)) {
+                \Ircbot\notice(
+                    $event->mask->nickname,
+                    'You need to be op to use this command.'
+                );
+                return;
+            }
         }
         if ($command->needsAdmin) {
             $command->needsAuth = true;
@@ -69,11 +91,12 @@ class AModule extends \Ircbot\Module\AModule
             );
             $hash = md5($event->mask->nickname . ';' . $event->botId);
             $whoises->$hash->event = $event;
-            $whoises->$hash->callback = array($command, $command->action);
+            $whoises->$hash->command = $command;
             $whoises->$hash->event->matchesB = $event->matches;
             \Botlife\Application\Storage::saveData('whois-db', $whoises);
         } else {
-            call_user_func(array($command, $command->action), $event);
+            $class = new $command;
+            $this->callCommand($command, $event);
         }
     }
     
@@ -101,8 +124,8 @@ class AModule extends \Ircbot\Module\AModule
         } else {
             $whois->event->auth = null;
         }
-        if ($whois->callback[0]->needsAdmin) {
-            $admins = array('marlinc', 'adrenaline');
+        if ($whois->command->needsAdmin) {
+            $admins = array('marlinc', 'adrenaline', 'classicrock');
             if (strtolower($whois->event->target) != '#botlife.team') {
                 return;
             }
@@ -119,7 +142,24 @@ class AModule extends \Ircbot\Module\AModule
         
         $whois->event->matches = $whois->event->matchesB;
         
-        call_user_func($whois->callback, $whois->event);
+        $this->callCommand($whois->command, $whois->event);
+    }
+    
+    public function callCommand($command, $event)
+    {
+        $command->{$command->action}($event);
+        foreach ($command->responses as $response) {
+            if (substr($event->target, 0, 1) == '#') {
+                if ($command->responseType == $command::RESPONSE_PUBLIC) {
+                    \Ircbot\msg($event->target, $response);
+                } elseif ($command->responseType == $command::RESPONSE_PRIVATE) {
+                    \Ircbot\notice($event->mask->nickname, $response);
+                } 
+            } else {
+                \Ircbot\msg($event->mask->nickname, $response);
+            }
+        }
+        $command->responses = array();
     }
 
 }

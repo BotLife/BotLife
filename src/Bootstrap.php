@@ -27,6 +27,7 @@ class Bootstrap
         new AdminModule;
         new \Botlife\Module\Bar;
         new \Botlife\Module\Invite;
+        new \Botlife\Module\Channel;
     }
     
     public function initBot()

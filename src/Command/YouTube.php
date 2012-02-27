@@ -9,6 +9,9 @@ class YouTube extends ACommand
         '/(http\:\/\/)?(www\.)?(youtube\.com\/watch\?(.*)?v\=(?P<idlong>[A-Za-z0-9_-]+)(\&(.*))?|youtu\.be\/(?P<id>[A-Za-z0-9_-]+))/',
     );
     public $action = 'lookup';
+    public $code   = 'youtube';
+    
+    public $responseType    = self::RESPONSE_PUBLIC;
     
     private $_lastrun;
     
@@ -33,7 +36,7 @@ class YouTube extends ACommand
         $response .= $C(12, '(') . $C(3, $data->uploader) . $C(12, ') - ');
         $response .= $C(12, 'Favorites: ') . $C(3, number_format($data->timesFavorited));
         $response .= $C(12, ' - Views: ') . $C(3, number_format($data->views));
-        \Ircbot\msg($event->target, $response);
+        $this->respond($response);
     }
     
     public function getData($videoId)
