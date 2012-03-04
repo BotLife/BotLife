@@ -18,6 +18,11 @@ class Bootstrap
         Ircbot::getInstance()->setDebugger(new Debug());
     }
     
+    public function initTimezone()
+    {
+        date_default_timezone_set('UTC');
+    }
+    
     public function initModules()
     {
         new MainModule;
