@@ -48,7 +48,7 @@ class Calc extends ACommand
         }
         set_error_handler(array($this, 'handleErrors'));
         $exp = $event->matches['exp'];
-        $response = $c(12, '[') . $c(3, 'CALC') . $c(12, '] ');
+        $response = null;
         if ($type == 'EVAL') {
             $response .= $c(12, 'Executed expression: ') . $c(3, $exp)
                 . $c(12, '. ') . $c(12, 'You can now use your expression in ')
@@ -84,7 +84,7 @@ class Calc extends ACommand
         }
         $calc->exp->$hash = $math;
         $time[] = $this->measureTime();
-        $this->respond(
+        $this->respondWithPrefix(
             $response . $c(12, ' (')
                 . $c(3, round(($time[1] - $time[0]) * 1000, 2)) . $c(12, 'ms)')
         );
