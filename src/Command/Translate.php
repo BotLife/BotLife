@@ -18,32 +18,28 @@ class Translate extends ACommand
         $this->detectResponseType($event->message);
         $c = new \Botlife\Application\Colors;
         if (!isset($event->matches['langs'])) {
-            $this->respond(
-                $c(12, '[') . $c(3, 'TRANS') . $c(12, '] ')
-                    . $c(12, 'You need to specify two languages. For example: ')
+            $this->respondWithPrefix(
+                $c(12, 'You need to specify two languages. For example: ')
                     . $c(3, '!translate nl en Hoe gaat het?')
             );  
             return;
         }
         if (!isset($event->matches['text'])) {
-            $this->respond(
-                $c(12, '[') . $c(3, 'TRANS') . $c(12, '] ')
-                    . $c(12, 'You need to specify a text. For example: ')
+            $this->respondWithPrefix(
+                $c(12, 'You need to specify a text. For example: ')
                     . $c(3, '!translate nl en Hoe gaat het?')
             );  
             return;
         }
         if (!in_array(strtolower($event->matches['from']), $this->languages)) {
-            $msg = 'The language you\'re trying to translate from isn\'t supported';
-            $this->respond(
-                $this->styleMessage($msg)
+            $this->respondWithPrefix(
+                'The language you\'re trying to translate from isn\'t supported'
             );
             return;
         }
         if (!in_array(strtolower($event->matches['to']), $this->languages)) {
-            $msg = 'The language you\'re trying to translate to isn\'t supported';
-            $this->respond(
-                $this->styleMessage($msg)
+            $this->respondWithPrefix(
+                'The language you\'re trying to translate to isn\'t supported'
             );
             return;
         }
@@ -52,21 +48,11 @@ class Translate extends ACommand
             $event->matches['text']
         );
         if (!$response) {
-            $msg = 'Could not translate your text';
-            $this->respond(
-                $this->styleMessage($msg)
-            );
+            $this->respondWithPrefix('Could not translate your text');
             return;
         }
         $msg = $response;
-        $this->respond($this->styleMessage($msg));
-    }
-    
-    public function styleMessage($text)
-    {
-        $C = new \Botlife\Application\Colors;
-        return $C(12, '[') . $C(3, 'MISC') . $C(12, '][') . $C(3, 'TRANSLATE')
-            . $C(12, ']') . $C(12, ' ' . $text);
+        $this->respondWithPrefix($msg);
     }
     
     public function getTranslation($from, $to, $text)

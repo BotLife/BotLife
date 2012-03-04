@@ -24,19 +24,26 @@ class YouTube extends ACommand
         $videoId = (empty($event->matches['id'])) ? $event->matches['idlong'] : $event->matches['id'];
         $data = $this->getData($videoId);
         $C = new \BotLife\Application\Colors;
-        $response = $C(12, '[') . $C(1, 'You') . $C(4, 'Tube') . $C(12, '] ');
-        $response .= $C(12, 'Title: ') . $C(3, $data->title);
-        $response .= $C(12, '[') . $C(3, gmdate('H:i:s', $data->duration))
-            . $C(12, ']') . ' - ';
-        $response .= $C(12, 'Rating: ')
-            . $C(3, $this->_getRatingBar($data->ratingAverage));
-        $response .= $C(12, '(Likes: ') . $C(3, number_format($data->ratingLikes));
-        $response .= $C(12, '/Dislikes: ') . $C(3, number_format($data->ratingDislikes));
-        $response .= $C(12, ') - Uploaded: ') . $C(3, $data->uploaded->format('Y-m-d'));
-        $response .= $C(12, '(') . $C(3, $data->uploader) . $C(12, ') - ');
-        $response .= $C(12, 'Favorites: ') . $C(3, number_format($data->timesFavorited));
-        $response .= $C(12, ' - Views: ') . $C(3, number_format($data->views));
-        $this->respond($response);
+        
+        $this->respondWithInformation(array(
+            'Title'     => $data->title . $C(12, '[')
+                . $C(3, gmdate('H:i:s', $data->duration)) . $C(12, ']'),
+            'Rating'    => array(
+                $this->_getRatingBar($data->ratingAverage),
+                array(
+                    'Likes'    => number_format($data->ratingLikes),
+                    'Dislikes' => number_format($data->ratingDislikes),
+                ),
+            ),
+            'Uploaded'  => array(
+                $data->uploaded->format('Y-m-d'),
+                array(
+                    $data->uploader,
+                ),
+            ),
+            'Favorites' => number_format($data->timesFavorited),
+            'Views'     => number_format($data->views)
+        ),  $C(12, 'You') . $C(03, 'Tube'));
     }
     
     public function getData($videoId)
@@ -67,8 +74,8 @@ class YouTube extends ACommand
     private function _getRatingBar($ratings) {
         $ratings = round($ratings, 0);
         $str = null;
-        $str .= chr(3) . '08' . str_repeat('★', $ratings);
-        $str .= chr(3) . '01' . str_repeat('★', 5 - $ratings);
+        $str .= chr(3) . '03' . str_repeat('★', $ratings);
+        $str .= chr(3) . '12' . str_repeat('★', 5 - $ratings);
         return $str;
     }
     

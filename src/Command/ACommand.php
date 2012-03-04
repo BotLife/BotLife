@@ -36,6 +36,60 @@ abstract class ACommand
         \Botlife\Application\Storage::saveData('commands', $commands);
     }
     
+    public function respondWithInformation($information, $prefix = null)
+    {
+        $c = new \Botlife\Application\Colors;
+        $response = null;
+        $i        = 0;
+        $total    = count($information);
+        foreach ($information as $key => $value) {
+            if (is_array($value)) {
+                $subResponse = null;
+                if (isset($value[0])) {
+                    $subResponse .= $c(3, $value[0]);
+                    unset($value[0]);
+                }
+                foreach ($value as $data) {
+                    $subResponse .= $c(12, '(');
+                    $subI     = 0;
+                    $subTotal = count($data);
+                    foreach ($data as $subKey => $subValue) {
+                        if (is_numeric($subKey)) {
+                            $subResponse .= $c(3, $subValue);
+                        } else {
+                            $subResponse .= $c(12, $subKey . ': ')
+                                . $c(3, $subValue);
+                        }
+                        if ($subI + 1 != $subTotal) {
+                            $subResponse .= $c(12, '/');
+                        }
+                        ++$subI;
+                    }
+                    $subResponse .=$c(12, ')');
+                }
+                $response .= $c(12, $key . ': ') . $c(3, $subResponse);
+            } else {
+                $response .= $c(12, $key . ': ') . $c(3, $value);
+            }
+            if ($i + 1 != $total) {
+                $response .= $c(12, ' - ');
+            }
+            ++$i; 
+        }
+        $this->respondWithPrefix($response, $prefix);
+    }
+    
+    public function respondWithPrefix($message, $prefix = null)
+    {
+        $c = new \Botlife\Application\Colors;
+        if (!$prefix) {
+            $prefix = strtoupper($this->code);
+        }
+        $response = $c(12, '[') . $c(3, $prefix) . $c(12, '] ');
+        $response .= $message;
+        $this->respond($response);
+    }
+    
     public function respond($message)
     {
         $this->responses[] = $message;

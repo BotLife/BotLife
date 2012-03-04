@@ -32,11 +32,10 @@ class EightBall extends ACommand
         $question = $event->matches['question'];
         $answer   = $this->getAnswer();
         
-        $this->respond(
-            $c(12, '[') . $c(3, '8BALL') . $c(12, '] ')
-                . $c(12, 'Question: ') . $c(3, $question) . $c(12, ' - ')
-                . $c(12, 'Answer: ') . $c(3, $answer)
-        );   
+        $this->respondWithInformation(array(
+            'Question' => $question,
+            'Answer'   => $answer,
+        ));
     }
     
     public function getAnswer()
