@@ -41,7 +41,7 @@ class Bootstrap
         $bot = new Bot();
         $bot->ident = 'BotLife';
         $bot->nickname = 'BotLife';
-        $bot->connect('192.168.0.20', 8000);
+        $bot->connect('localhost');
         $bot->sendRawData(
             new \Ircbot\Command\Pass($bnc_pass)
         );
