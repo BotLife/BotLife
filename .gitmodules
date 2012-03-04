@@ -1,3 +1,6 @@
 [submodule "src/library/IRCBot"]
 	path = src/library/IRCBot
 	url = git://github.com/Marlinc/IRCBot.git
+[submodule "src/library/bar-game"]
+	path = src/library/bar-game
+	url = git://github.com/BotLife/bar-game.git

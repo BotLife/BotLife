@@ -11,6 +11,7 @@ set_include_path(
         PATH_SEPARATOR,
         array(
             realpath(APPLICATION_PATH . '/library'),
+            realpath(APPLICATION_PATH . '/library/bar-game/src'),
             APPLICATION_PATH,
             get_include_path(),
         )
