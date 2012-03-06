@@ -5,23 +5,27 @@ namespace Botlife;
 class Debug extends \Ircbot\Application\Debug\ADebug
 {
 
+    protected $_longestSign = 54;
+
     public function log($category, $type, $message,
         $level = IRCBOT_DEBUG_NORMAL) {
-        if (func_num_args() == 3 || func_num_args() == 4) {
-            list($category, $type, $message) = func_get_args();
-            if (func_num_args() == 4) {
-                $level = func_get_arg(3);
-            }
-        } elseif (func_num_args() == 2) {
-            $category = 'System';
-            $type     = 'Daemon';
-            $message  = func_get_arg(0);
+
+        $signLen = strlen('[' . $category . '|' . $type . ']');
+        if ($signLen > $this->_longestSign) {
+            $this->_longestSign = $signLen;
         }
         $c = new Application\Colors;
         $c->output = Application\Colors::OUTPUT_ANSI;
+        $options = getopt('f');
+        if (isset($options['f'])) {
+            echo str_pad(
+                $this->getSign($c, $category, $type), $this->_longestSign
+            ) . ' ' . $message . PHP_EOL;
+        }
         file_put_contents(
             'botlife/log',
-            '[' . $category . '|' . $type . '] ' . $message . PHP_EOL,
+            str_pad('[' . $category . '|' . $type . ']', $this->_longestSign)
+                . ' ' . $message . PHP_EOL,
             FILE_APPEND
         );
     }

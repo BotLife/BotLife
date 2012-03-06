@@ -23,6 +23,7 @@ class Bootstrap
     
     public function initDaemon()
     {
+        $debug = Ircbot::getInstance()->getDebugger();
         \System_Daemon::setOption('usePEAR'       , false);
         \System_Daemon::setOption('appName'       , 'botlife');
         \System_Daemon::setOption('appDir'        , dirname(__FILE__) . '/..');
@@ -30,8 +31,14 @@ class Bootstrap
             'appPidLocation', dirname(__FILE__) . '/../botlife/log.pid'
         );
         \System_Daemon::setOption('appRunAsUID'   , getmyuid()); 
-        \System_Daemon::setOption('appRunAsGID'   , getmygid()); 
-        \System_Daemon::start();
+        \System_Daemon::setOption('appRunAsGID'   , getmygid());
+        $options = getopt('f');
+        if (!isset($options['f'])) {
+            $debug->log('Process', 'Daemon', 'Daemonizing...');
+            \System_Daemon::start();
+        } else {
+            $debug->log('Process', 'Daemon', 'Running in foreground...');
+        }
     }
     
     public function initTimezone()
