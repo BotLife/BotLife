@@ -26,7 +26,9 @@ class Bootstrap
         \System_Daemon::setOption('usePEAR'       , false);
         \System_Daemon::setOption('appName'       , 'botlife');
         \System_Daemon::setOption('appDir'        , dirname(__FILE__) . '/..');
-        \System_Daemon::setOption("appPidLocation", dirname(__FILE__) . '/../botlife/log.pid');
+        \System_Daemon::setOption(
+            'appPidLocation', dirname(__FILE__) . '/../botlife/log.pid'
+        );
         \System_Daemon::setOption('appRunAsUID'   , getmyuid()); 
         \System_Daemon::setOption('appRunAsGID'   , getmygid()); 
         \System_Daemon::start();

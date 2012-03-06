@@ -20,7 +20,7 @@ class Debug extends \Ircbot\Application\Debug\ADebug
         $c = new Application\Colors;
         $c->output = Application\Colors::OUTPUT_ANSI;
         file_put_contents(
-            'log',
+            'botlife/log',
             '[' . $category . '|' . $type . '] ' . $message . PHP_EOL,
             FILE_APPEND
         );
