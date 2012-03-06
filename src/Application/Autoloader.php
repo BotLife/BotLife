@@ -21,7 +21,8 @@ class Autoloader
                 require_once 'IRCBot/src/' . implode(DIRECTORY_SEPARATOR, $classPath) . '.php';
             }
         } else {
-            require_once $class . '.php';
+            $classPath = explode('_', $class);
+            require_once implode(DIRECTORY_SEPARATOR, $classPath) . '.php';
         }
     }
 

@@ -12,6 +12,7 @@ set_include_path(
         array(
             realpath(APPLICATION_PATH . '/library'),
             realpath(APPLICATION_PATH . '/library/bar-game/src'),
+            realpath(APPLICATION_PATH . '/library/system_daemon'),
             APPLICATION_PATH,
             get_include_path(),
         )
