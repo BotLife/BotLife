@@ -6,4 +6,4 @@
 	url = git://github.com/BotLife/bar-game.git
 [submodule "src/library/system_daemon"]
 	path = src/library/system_daemon
-	url = git://github.com/kvz/system_daemon.git
+	url = git://github.com/BotLife/system_daemon.git
