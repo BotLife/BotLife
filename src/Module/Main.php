@@ -11,6 +11,7 @@ class Main extends AModule
         'on251'           => 'setNetwork',
         'loopIterate',
         'onConnect',
+        'onDisconnected',
     );
 
     public $_oldTime = array();
@@ -20,6 +21,19 @@ class Main extends AModule
         \Ircbot\joinChan('#BotLife,#BotLife.Team');
     }
     
+    public function onDisconnected($botId)
+    {
+        $bot = Ircbot::getInstance()->getBotHandler()
+            ->getBotById($botId);
+        if (!$bot) {
+            return;
+        }
+        // Little hack to close the socket
+        \Ircbot\Application::getInstance()->getSocketHandler()
+            ->getSocketById(1)->close();
+        $bot->connect($bot->serverAddress, $bot->serverPort);
+    }
+
     public function setNetwork()
     {
         $bot = Ircbot::getInstance()->getBotHandler()
