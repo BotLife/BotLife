@@ -30,7 +30,9 @@ class Application
     {
         $methods = get_class_methods($this->getBootstrap());
         foreach ($methods as $method) {
-            call_user_func(array($this->getBootstrap(), $method));
+            if (substr($method, 0, 3) == 'init') {
+                call_user_func(array($this->getBootstrap(), $method));
+            }
         }
         return $this;
     }
