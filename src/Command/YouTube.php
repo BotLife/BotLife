@@ -23,6 +23,9 @@ class YouTube extends ACommand
         $this->_lastrun = time();
         $videoId = (empty($event->matches['id'])) ? $event->matches['idlong'] : $event->matches['id'];
         $data = $this->getData($videoId);
+        if (!$data) {
+            return false;
+        }
         $C = new \BotLife\Application\Colors;
         
         $this->respondWithInformation(array(
@@ -60,6 +63,9 @@ class YouTube extends ACommand
         $video->duration = (int) $dOM->getElementsByTagName('duration')->item(0)
             ->getAttribute('seconds');
         $rating = $dOM->getElementsByTagName('rating')->item(0);
+        if (!$rating) {
+            return false;
+        }
         $video->ratingAverage = (float) $rating->getAttribute('average');
         $video->ratingTotal = (int) $rating->getAttribute('numRaters');
         $rating = $dOM->getElementsByTagName('rating')->item(1);

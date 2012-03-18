@@ -1,26 +1,31 @@
 <?php
 
-class StorageObject extends ArrayObject
+class StorageObject implements ArrayAccess, Serializable
 {
     
-    private $_data;
+    protected $_array;
     
     public function __isset($key)
     {
-        return isset($this->_data[$key]);
+        return isset($this->_array[$key]);
     }
     
     public function __get($key)
     {
-        if (!isset($this->_data[$key])) {
-            $this->_data[$key] = new self;
+        if (!isset($this->_array[$key])) {
+            $this->_array[$key] = new self;
         }
-        return $this->_data[$key];
+        return $this->_array[$key];
     }
     
     public function __set($key, $value)
     {
-        $this->_data[$key] = $value;
+        $this->_array[$key] = $value;
+    }
+    
+    public function __unset($key)
+    {
+        unset($this->_array[$key]);
     }
     
     public function offsetExists($key)
@@ -36,6 +41,21 @@ class StorageObject extends ArrayObject
     public function offsetSet($key, $value)
     {
         $this->__set($key, $value);
-    }   
+    }
+       
+    public function offsetUnset($key)
+    {
+        $this->__unset($key);
+    }
+    
+    public function serialize()
+    {
+        return serialize($this->_array);
+    }
+    
+    public function unserialize($data)
+    {
+        $this->_array = unserialize($data);
+    }
     
 }
