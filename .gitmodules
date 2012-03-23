@@ -4,3 +4,6 @@
 [submodule "src/library/bar-game"]
 	path = src/library/bar-game
 	url = git://github.com/BotLife/bar-game.git
+[submodule "src/library/evalmath"]
+	path = src/library/evalmath
+	url = git://github.com/BotLife/evalmath.git
