@@ -85,9 +85,12 @@ abstract class ACommand
         if (!$prefix) {
             $prefix = strtoupper($this->code);
         }
-        $response = $c(12, '[') . $c(3, $prefix) . $c(12, '] ');
-        $response .= $message;
-        $this->respond($response);
+        $messages = explode(PHP_EOL, $message);
+        foreach ($messages as $message) {
+            $response = $c(12, '[') . $c(3, $prefix) . $c(12, '] ');
+            $response .= $message;
+            $this->respond($response);
+        }
     }
     
     public function respond($message)
