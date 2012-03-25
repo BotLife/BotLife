@@ -70,11 +70,13 @@ class Calc extends ACommand
             } else {
                 $response .= 'Could not execute your expression because ';
                 if ($this->lastCalcErrors & self::ERR_DEVIDEBYZERO) {
-                    $response .= 'you tried to divide by zero.';
+                    //$response .= 'you tried to divide by zero.';
+                    $response = 'AHHH THE WORLD ENDS!!!! SOMEONE DIVIDED '
+                    	. 'BY ZERO!!! HELPPP!?!?!';
                 } elseif ($this->lastCalcErrors & self::ERR_SQRTNEGATIVE) {
                     $response .= 'you tried to do a square root with a negative number.';
                 } elseif ($this->lastCalcErrors & self::ERR_INTERNALERROR) {
-                    $response .= 'of a internet error.';
+                    $response .= 'of a internal error.';
                 } elseif ($this->lastCalcErrors & self::ERR_UNDEFINEDVARIABLE) {
                     $response .= 'you defined a unknown variable.';
                 } else {

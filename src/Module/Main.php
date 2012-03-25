@@ -11,6 +11,7 @@ class Main extends AModule
         'on251'           => 'setNetwork',
         'loopIterate',
         'onConnect',
+        'onCtcpRequest'
     );
 
     public $_oldTime = array();
@@ -43,6 +44,19 @@ class Main extends AModule
         if ((time() - $this->_oldTime[1]) >= 60) {
             \Botlife\Application\Storage::saveToDisk();
             $this->_oldTime[1] = time();
+        }
+    }
+    
+    public function onCtcpRequest(\Ircbot\Command\CtcpRequest $event)
+    {
+        if ($event->message == 'VERSION') {
+            $reply = new \Ircbot\Command\CtcpReply(
+            $event->mask->nickname,
+                'VERSION BotLife version ' . `git describe`
+            );
+            $bot = Ircbot::getInstance()->getBotHandler()
+            ->getBotById($event->botId);
+            $bot->sendRawData($reply);
         }
     }
 

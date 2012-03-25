@@ -10,6 +10,7 @@ class Misc extends AModule
         '\Botlife\Command\YouTube',
         '\Botlife\Command\EightBall',
         '\Botlife\Command\Misc\NineGag',
+    	'\Botlife\Command\Imdb',
     );
 
 }

@@ -30,15 +30,34 @@ class Math
     
     public function alphaRound($val, $precision = 2)
     {
+        if ($val < 0) {
+            $prefix = '-';
+            $val = abs($val);
+        }
         if ($val < 1000) {
             return $val;
         }
+        $suffix = '';
         foreach ($this->units as $key => $unit) {
             $start = pow(1000, $key + 1);
-            if ($val > $start && $key + 1 != count($this->units)) {
+            if ($key + 1 == count($this->units) && $val >= ($start * 1000)) {
+                $tmp = 1;
+                while (true) {
+                    if (($val / $tmp) < 1000) {
+                        $div = $tmp / pow(1000, $key + 1);
+                        break;
+                    }
+                    $tmp *= 1000; 
+                }
+                $suffix = ' * ' .$this->alphaRound($div, 0);
+                $val /= $div;
+            } 
+            if ($val >= ($start * 1000) && $key + 1 != count($this->units)) {
                 continue;
             }
-            return number_format($val / $start, $precision, ',', '.') . $unit;
+            $text = $prefix . number_format($val / $start, $precision, ',', '.')
+                . $unit . $suffix;
+            return $text;
         }
     }
     
