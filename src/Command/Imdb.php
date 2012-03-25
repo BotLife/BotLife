@@ -34,8 +34,8 @@ class Imdb extends ACommand
     {
         $c    = new \BotLife\Application\Colors;
         $this->respondWithInformation(array(
-        	'Title' => $data->title . $c(12, '[')
-                . $c(3, gmdate('H:i:s', $data->duration)) . $c(12, ']'),
+        	'Title' => $data->title . (($data->duration) ? $c(12, '[')
+                . $c(3, gmdate('H:i:s', $data->duration)) . $c(12, ']') : null),
             'Rating' => array(
                 $this->_getRatingBar($data->ratingAverage),
                 array(
@@ -43,9 +43,8 @@ class Imdb extends ACommand
                     'Dislikes' => number_format($data->ratingDislikes),
                 ),
             ),
-            'Released' => array(
-                $data->released->format('Y-m-d'),
-            ),
+            'Released' => ($data->released) ? $data->released->format('Y-m-d')
+                : 'Unknown',
             'Plot' => $data->plot,
             'URL'  => $data->url,
         ));

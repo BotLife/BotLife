@@ -13,9 +13,15 @@ class MovieInfo
             return false;
         }
         
+        var_dump($data);
+        
         $movie = new \StdClass;
         $movie->title = $data->Title;
-        $movie->released = new \DateTime($data->Released);
+        if ($data->Released != 'N/A') {
+            $movie->released = new \DateTime($data->Released);
+        } else {
+            $movie->released = null;
+        }
         $movie->duration = $this->_getDuration($data->Runtime);
         $movie->ratingAverage = round((float) $data->Rating / 2);
         $movie->ratingTotal = (int) $data->Votes;
