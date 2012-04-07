@@ -36,12 +36,13 @@ abstract class ACommand
         \Botlife\Application\Storage::saveData('commands', $commands);
     }
     
-    public function respondWithInformation($information, $prefix = null)
+    public function respondWithInformation($information, $code = null)
     {
         $c = new \Botlife\Application\Colors;
         $response = null;
         $i        = 0;
         $total    = count($information);
+        $prefix   = null;
         foreach ($information as $key => $value) {
             if (is_array($value)) {
                 $subResponse = null;
@@ -67,16 +68,23 @@ abstract class ACommand
                     }
                     $subResponse .=$c(12, ')');
                 }
-                $response .= $c(12, $key . ': ') . $c(3, $subResponse);
+                $append = $c(12, $key . ': ') . $c(3, $subResponse);
             } else {
-                $response .= $c(12, $key . ': ') . $c(3, $value);
+                $append = $c(12, $key . ': ') . $c(3, $value);
             }
-            if ($i + 1 != $total) {
-                $response .= $c(12, ' - ');
-            }
+                $tmp = $response . $append;
+                $suffix = $c(12, ' - ');
+                if (strlen($tmp) > 200 && $i != 0) {
+                    var_dump($tmp);
+                    $this->respondWithPrefix($response, $code);
+                    $total -= $i;
+                    $response = null;
+                    $i = 0;
+                } 
+                $response .= $append . $suffix;
             ++$i; 
         }
-        $this->respondWithPrefix($response, $prefix);
+        $this->respondWithPrefix($response, $code);
     }
     
     public function respondWithPrefix($message, $prefix = null)
