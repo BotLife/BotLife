@@ -22,6 +22,7 @@ abstract class ACommand
     );
     public $responseType    = self::RESPONSE_PRIVATE;
     public $responses       = array();
+    public $botChannels     = array('#stats', '#bots');
     
     public function __construct()
     {
@@ -85,9 +86,12 @@ abstract class ACommand
         if (!$prefix) {
             $prefix = strtoupper($this->code);
         }
-        $response = $c(12, '[') . $c(3, $prefix) . $c(12, '] ');
-        $response .= $message;
-        $this->respond($response);
+        $messages = explode(PHP_EOL, $message);
+        foreach ($messages as $message) {
+            $response = $c(12, '[') . $c(3, $prefix) . $c(12, '] ');
+            $response .= $message;
+            $this->respond($response);
+        }
     }
     
     public function respond($message)
@@ -95,8 +99,11 @@ abstract class ACommand
         $this->responses[] = $message;
     }
     
-    public function detectResponseType($command)
+    public function detectResponseType($command, $target = null)
     {
+        if (!$target || in_array($target, $this->botChannels)) {
+            $this->responseType = self::RESPONSE_PRIVATE;
+        } 
         $symbol = substr($command, 0, 1);
         foreach ($this->responseSymbols as $type => $symbols) {
             if (in_array($symbol, $symbols)) {

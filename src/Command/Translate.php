@@ -15,7 +15,7 @@ class Translate extends ACommand
 
     public function translate($event)
     {
-        $this->detectResponseType($event->message);
+        $this->detectResponseType($event->message, $event->target);
         $c = new \Botlife\Application\Colors;
         if (!isset($event->matches['langs'])) {
             $this->respondWithPrefix(

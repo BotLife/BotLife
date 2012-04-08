@@ -70,11 +70,13 @@ class Calc extends ACommand
             } else {
                 $response .= 'Could not execute your expression because ';
                 if ($this->lastCalcErrors & self::ERR_DEVIDEBYZERO) {
-                    $response .= 'you tried to divide by zero.';
+                    //$response .= 'you tried to divide by zero.';
+                    $response = 'AHHH THE WORLD ENDS!!!! SOMEONE DIVIDED '
+                    	. 'BY ZERO!!! HELPPP!?!?!';
                 } elseif ($this->lastCalcErrors & self::ERR_SQRTNEGATIVE) {
                     $response .= 'you tried to do a square root with a negative number.';
                 } elseif ($this->lastCalcErrors & self::ERR_INTERNALERROR) {
-                    $response .= 'of a internet error.';
+                    $response .= 'of a internal error.';
                 } elseif ($this->lastCalcErrors & self::ERR_UNDEFINEDVARIABLE) {
                     $response .= 'you defined a unknown variable.';
                 } else {
@@ -88,7 +90,7 @@ class Calc extends ACommand
             $response . $c(12, ' (')
                 . $c(3, round(($time[1] - $time[0]) * 1000, 2)) . $c(12, 'ms)')
         );
-        $this->detectResponseType($event->message);
+        $this->detectResponseType($event->message, $event->target);
         \Botlife\Application\Storage::saveData('math-calc', $calc);
         restore_error_handler();
         $this->lastCalcErrors = 0;

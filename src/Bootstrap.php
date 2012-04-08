@@ -46,6 +46,31 @@ class Bootstrap
         date_default_timezone_set('UTC');
     }
     
+    public function initProxy()
+    {
+        $debug = new \Botlife\Debug;
+        $httpProxy = (getenv('http_proxy')) ? getenv('http_proxy') : 
+            getenv('HTTP_PROXY');
+        if (!$httpProxy) {
+            return;
+        }
+        $parts = parse_url($httpProxy);
+        if (!$parts) {
+            $debug->log(
+            	'NET', 'PROXY', 'Malformed proxy given!	'
+            );
+            return;
+        }
+        $proxy = 'tcp://' . $parts['host'] . ':' .  $parts['port'];
+        $options = stream_context_get_options(stream_context_get_default());
+        $options['http']['proxy'] = $proxy;
+        $context = stream_context_set_default($options);
+        libxml_set_streams_context($context);
+        $debug->log(
+        	'NET', 'PROXY', 'Set the default HTTP proxy to: ' . $proxy
+        );
+    }
+    
     public function initModules()
     {
         new MainModule;
@@ -64,7 +89,7 @@ class Bootstrap
         $bot = new Bot();
         $bot->ident = 'BotLife';
         $bot->nickname = 'BotLife';
-        $bot->connect('localhost');
+        $bot->connect('127.0.0.1', 8000);
         $bot->sendRawData(
             new \Ircbot\Command\Pass($bnc_pass)
         );

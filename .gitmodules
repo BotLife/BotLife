@@ -7,3 +7,6 @@
 [submodule "src/library/system_daemon"]
 	path = src/library/system_daemon
 	url = git://github.com/BotLife/system_daemon.git
+[submodule "src/library/evalmath"]
+	path = src/library/evalmath
+	url = git://github.com/BotLife/evalmath.git
