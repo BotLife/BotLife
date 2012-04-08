@@ -22,6 +22,7 @@ abstract class ACommand
     );
     public $responseType    = self::RESPONSE_PRIVATE;
     public $responses       = array();
+    public $botChannels     = array('#stats', '#bots');
     
     public function __construct()
     {
@@ -98,8 +99,11 @@ abstract class ACommand
         $this->responses[] = $message;
     }
     
-    public function detectResponseType($command)
+    public function detectResponseType($command, $target = null)
     {
+        if (!$target || in_array($target, $this->botChannels)) {
+            $this->responseType = self::RESPONSE_PRIVATE;
+        } 
         $symbol = substr($command, 0, 1);
         foreach ($this->responseSymbols as $type => $symbols) {
             if (in_array($symbol, $symbols)) {

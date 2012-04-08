@@ -11,7 +11,7 @@ class Imdb extends ACommand
     
     public function init(\Ircbot\Type\MessageCommand $event)
     {
-        $this->detectResponseType($event->message);
+        $this->detectResponseType($event->message, $event->target);
         if (!isset($event->matches['title'])) {
             $this->respondWithPrefix(
                 'You might want to specifiy a movie title. '
