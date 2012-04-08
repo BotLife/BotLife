@@ -2,6 +2,8 @@
 
 namespace Botlife\Command;
 
+use Ircbot\Type\MessageCommand;
+
 class YouTube extends ACommand
 {
 
@@ -15,11 +17,12 @@ class YouTube extends ACommand
     
     private $_lastrun;
     
-    public function lookup($event)
+    public function lookup(MessageCommand $event)
     {
         if ((time() - $this->_lastrun) <= 3) {
             return;
         }
+        $this->detectResponseType($event->message, $event->target);
         $this->_lastrun = time();
         $videoId = (empty($event->matches['id'])) ? $event->matches['idlong'] : $event->matches['id'];
         $data = $this->getData($videoId);

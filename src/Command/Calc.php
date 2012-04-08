@@ -90,7 +90,7 @@ class Calc extends ACommand
             $response . $c(12, ' (')
                 . $c(3, round(($time[1] - $time[0]) * 1000, 2)) . $c(12, 'ms)')
         );
-        $this->detectResponseType($event->message);
+        $this->detectResponseType($event->message, $event->target);
         \Botlife\Application\Storage::saveData('math-calc', $calc);
         restore_error_handler();
         $this->lastCalcErrors = 0;

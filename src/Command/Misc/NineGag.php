@@ -13,7 +13,7 @@ class NineGag extends \Botlife\Command\ACommand
     
     public function run($event)
     {
-        $this->detectResponseType($event->message);
+        $this->detectResponseType($event->message, $event->target);
         
         $posts = $this->getPosts();
         $c = new \Botlife\Application\Colors;
