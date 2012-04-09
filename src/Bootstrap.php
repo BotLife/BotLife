@@ -58,6 +58,7 @@ class Bootstrap
         new \Botlife\Module\Bar;
         new \Botlife\Module\Invite;
         new \Botlife\Module\Channel;
+        new \Botlife\Module\BitTorrent;
     }
     
     public function initBot()
