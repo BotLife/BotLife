@@ -17,6 +17,8 @@ class NineGag extends \Botlife\Command\ACommand
         
         $posts = $this->getPosts();
         if (count($posts) === 0) {
+            $debug = new \Botlife\Debug;
+            $debug->log('NineGag', 'Error', 'An error occured when fetching the 9gag data.');
             $this->respondWithInformation(array(
                 'Error' => "Failed to fetch 9gag data."
             ));
@@ -31,8 +33,7 @@ class NineGag extends \Botlife\Command\ACommand
     
     public function getPosts()
     {
-        //$xml = simplexml_load_file('http://tumblr.9gag.com/rss');
-        $xml = @simplexml_load_file('http://tumblr.9gag.comssdf/rss');
+        $xml = @simplexml_load_file('http://tumblr.9gag.com/rss');
         if ($xml === false) {
             return array();
         }
