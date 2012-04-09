@@ -16,6 +16,12 @@ class NineGag extends \Botlife\Command\ACommand
         $this->detectResponseType($event->message, $event->target);
         
         $posts = $this->getPosts();
+        if (count($posts) === 0) {
+            $this->respondWithInformation(array(
+                'Error' => "Failed to fetch 9gag data."
+            ));
+            return;
+        }
         $c = new \Botlife\Application\Colors;
         $this->respondWithInformation(array(
             'Title' => $posts[0]->title,
@@ -25,7 +31,11 @@ class NineGag extends \Botlife\Command\ACommand
     
     public function getPosts()
     {
-        $xml = simplexml_load_file('http://tumblr.9gag.com/rss');
+        //$xml = simplexml_load_file('http://tumblr.9gag.com/rss');
+        $xml = @simplexml_load_file('http://tumblr.9gag.comssdf/rss');
+        if ($xml === false) {
+            return array();
+        }
         $post = new \StdClass;
         $tmp = array();
         foreach ($xml->channel->item as $item) {
