@@ -23,7 +23,7 @@ class Calc extends ACommand
         if (!isset($event->matches['exp'])) {
             $this->respond(
                 $c(12, '[') . $c(3, 'CALC') . $c(12, '] ')
-                    . $c(12, 'You need to specify a expression. For example: ')
+                    . $c(12, 'You need to specify an expression. For example: ')
                     . $c(3, '!calc 5^3')
             );  
             return;
@@ -76,11 +76,11 @@ class Calc extends ACommand
                 } elseif ($this->lastCalcErrors & self::ERR_SQRTNEGATIVE) {
                     $response .= 'you tried to do a square root with a negative number.';
                 } elseif ($this->lastCalcErrors & self::ERR_INTERNALERROR) {
-                    $response .= 'of a internal error.';
+                    $response .= 'of an internal error.';
                 } elseif ($this->lastCalcErrors & self::ERR_UNDEFINEDVARIABLE) {
-                    $response .= 'you defined a unknown variable.';
+                    $response .= 'you defined an unknown variable.';
                 } else {
-                    $response .= 'of a unknown error.';
+                    $response .= 'of an unknown error.';
                 }
             }        
         }
