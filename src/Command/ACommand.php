@@ -67,14 +67,7 @@ abstract class ACommand
         if (strlen($response) > 0)
             $this->respondWithPrefix($response, $code);
     }
-    /*
-    <BotLife> [YouTube] Title: The "Java Life" Rap Music Video[00:03:13] - Rating: ★★★★★(Likes: 5,497/Dislikes: 183) - 
-    <BotLife> [YouTube] Uploaded: 2011-10-03(java) - Favorites: 2,027 - Views: 396,639 - 
-    
-    <BotLife> [YOUTUBE] Title: The "Java Life" Rap Music Video[00:03:13] - ★★★★★(Likes: 5,500/Dislikes: 183) - 2011-10-03(java) - Favorites: 2,027
-    <BotLife> [YouTube] Views: 396,639
-    */
-    
+        
     public function respondWithPrefix($message, $prefix = null)
     {
         $c = new \Botlife\Application\Colors;
