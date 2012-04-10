@@ -39,53 +39,41 @@ abstract class ACommand
     public function respondWithInformation($information, $code = null)
     {
         $c = new \Botlife\Application\Colors;
-        $response = null;
-        $i        = 0;
-        $total    = count($information);
-        $prefix   = null;
+        $response = '';
+        $first    = true;
         foreach ($information as $key => $value) {
-            if (is_array($value)) {
-                $subResponse = null;
-                if (isset($value[0])) {
-                    $subResponse .= $c(3, $value[0]);
-                    unset($value[0]);
-                }
-                foreach ($value as $data) {
-                    $subResponse .= $c(12, '(');
-                    $subI     = 0;
-                    $subTotal = count($data);
-                    foreach ($data as $subKey => $subValue) {
-                        if (is_numeric($subKey)) {
-                            $subResponse .= $c(3, $subValue);
-                        } else {
-                            $subResponse .= $c(12, $subKey . ': ')
-                                . $c(3, $subValue);
-                        }
-                        if ($subI + 1 != $subTotal) {
-                            $subResponse .= $c(12, '/');
-                        }
-                        ++$subI;
-                    }
-                    $subResponse .=$c(12, ')');
-                }
-                $append = $c(12, $key . ': ') . $c(3, $subResponse);
-            } else {
-                $append = $c(12, $key . ': ') . $c(3, $value);
-            }
-                $tmp = $response . $append;
-                $suffix = $c(12, ' - ');
-                if (strlen($tmp) > 200 && $i != 0) {
-                    var_dump($tmp);
+            if (!$first) {
+                if (strlen($response) >= 200) {
                     $this->respondWithPrefix($response, $code);
-                    $total -= $i;
-                    $response = null;
-                    $i = 0;
-                } 
-                $response .= $append . $suffix;
-            ++$i; 
+                    $response = '';
+                } else {
+                    $response .= $c(12, ' - ');
+                }
+            }
+            $first = false;
+            $response .= $c(12, $key) . ': ' . ((!is_array($value)) ? $c(3, $value) : '');
+            if (!is_array($value)) continue;
+            
+            $response .= $c(3, $value[0]) . $c(12, '(');
+            $arraylen = count($value[1]);
+            $i        = 0;
+            foreach ($value[1] as $key2 => $value2) {
+                if (is_string($key2)) $response .= $c(12, $key2 . ': ') . $c(3, $value2);
+                else                  $response .= $c(3,  $value2);
+                if (++$i < $arraylen) $response .= $c(12, '/');
+            }
+            $response .= $c(12, ')');
         }
-        $this->respondWithPrefix($response, $code);
+        if (strlen($response) > 0)
+            $this->respondWithPrefix($response, $code);
     }
+    /*
+    <BotLife> [YouTube] Title: The "Java Life" Rap Music Video[00:03:13] - Rating: ★★★★★(Likes: 5,497/Dislikes: 183) - 
+    <BotLife> [YouTube] Uploaded: 2011-10-03(java) - Favorites: 2,027 - Views: 396,639 - 
+    
+    <BotLife> [YOUTUBE] Title: The "Java Life" Rap Music Video[00:03:13] - ★★★★★(Likes: 5,500/Dislikes: 183) - 2011-10-03(java) - Favorites: 2,027
+    <BotLife> [YouTube] Views: 396,639
+    */
     
     public function respondWithPrefix($message, $prefix = null)
     {
