@@ -10,3 +10,6 @@
 [submodule "src/library/magnet_parser"]
 	path = src/library/magnet_parser
 	url = git://github.com/BotLife/magnet_parser.git
+[submodule "src/library/default-modules"]
+	path = src/library/default-modules
+	url = git://github.com/BotLife/default-modules.git

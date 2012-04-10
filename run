@@ -14,6 +14,7 @@ set_include_path(
             realpath(APPLICATION_PATH . '/library/bar-game/src'),
             realpath(APPLICATION_PATH . '/library/evalmath/src'),
             realpath(APPLICATION_PATH . '/library/magnet_parser/src'),
+            realpath(APPLICATION_PATH . '/library/default-modules/src'),
             APPLICATION_PATH,
             get_include_path(),
         )
