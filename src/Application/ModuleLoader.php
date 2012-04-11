@@ -13,6 +13,21 @@ class ModuleLoader
             if (!$data['autoload']) {
                 continue;
             }
+            if (isset($data['include_path']) && is_array($data['include_path'])) {
+                $locations = array();
+                $locations[] = get_include_path();
+                foreach ($data['include_path'] as $location) {
+                    $locations[] = realpath(
+                        dirname($file) . DIRECTORY_SEPARATOR . $location
+                    );
+                }
+                set_include_path(
+                    implode(
+                        PATH_SEPARATOR,
+                        $locations
+                    )
+                );
+            }
             $class = '\Botlife\Module\\' . $data['class'];
             new $class;
         }
