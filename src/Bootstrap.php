@@ -53,14 +53,11 @@ class Bootstrap
         new \Botlife\Application\ModuleLoader();
         
         new MainModule;
-        new MiscModule;
-        new MathModule;
         new AuthModule;
         new AdminModule;
         new \Botlife\Module\Bar;
         new \Botlife\Module\Invite;
         new \Botlife\Module\Channel;
-        new \Botlife\Module\BitTorrent;
     }
     
     public function initBot()
