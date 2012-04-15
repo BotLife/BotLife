@@ -10,3 +10,6 @@
 [submodule "src/library/default-modules"]
 	path = src/library/default-modules
 	url = git://github.com/BotLife/default-modules.git
+[submodule "src/library/data_getter"]
+	path = src/library/data_getter
+	url = git://github.com/BotLife/data_getter.git
