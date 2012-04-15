@@ -5,6 +5,8 @@ namespace Botlife\Application;
 class ModuleLoader
 {
     
+    private $_modules = array();
+    
     public function __construct()
     {
         $files = $this->findInfoFiles();
@@ -13,21 +15,26 @@ class ModuleLoader
             if (!$data['autoload']) {
                 continue;
             }
+            if (isset($this->_modules[$data['class']])) {
+                continue;
+            }
+            $locations = array();
+            $locations[] = get_include_path();
+            $locations[] = dirname($file);
             if (isset($data['include_path']) && is_array($data['include_path'])) {
-                $locations = array();
-                $locations[] = get_include_path();
                 foreach ($data['include_path'] as $location) {
                     $locations[] = realpath(
                         dirname($file) . DIRECTORY_SEPARATOR . $location
                     );
                 }
-                set_include_path(
-                    implode(
-                        PATH_SEPARATOR,
-                        $locations
-                    )
-                );
             }
+            set_include_path(
+                implode(
+                    PATH_SEPARATOR,
+                    $locations
+                )
+            );
+            $this->_modules[$data['class']] = $data;
             $class = '\Botlife\Module\\' . $data['class'];
             new $class;
         }
