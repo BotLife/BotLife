@@ -12,7 +12,7 @@ use \Botlife\Module\Admin as AdminModule;
 
 class Bootstrap
 {
-    
+
     public function initDebugger()
     {
         Ircbot::getInstance()->setDebugger(new Debug());
@@ -50,9 +50,9 @@ class Bootstrap
     
     public function initModules()
     {
+        new \Botlife\Application\ModuleLoader();
+        
         new MainModule;
-        new MiscModule;
-        new MathModule;
         new AuthModule;
         new AdminModule;
         new \Botlife\Module\Bar;

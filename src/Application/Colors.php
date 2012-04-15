@@ -65,10 +65,18 @@ class Colors
         self::STYLE_ITALIC        => 29, 
     );
     
+    public $specialMapping = array(
+        101 => self::COLOR_LICHT_BLUE,
+        102 => self::COLOR_GREEN
+    );
+    
     public $output = self::OUTPUT_IRC;
     
     public function __invoke($color = self::STYLE_NORMAL, $text = null)
     {
+        if (isset($this->specialMapping[$color])) {
+            $color = $this->specialMapping[$color];
+        }
         if ($text) {
             return self::__invoke($color) . $text;
         } else {
@@ -87,7 +95,6 @@ class Colors
                 }
                 return chr(27) . $this->_ansi[$color];
             }
-            
         }
     }
     

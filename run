@@ -13,6 +13,8 @@ set_include_path(
             realpath(APPLICATION_PATH . '/library'),
             realpath(APPLICATION_PATH . '/library/bar-game/src'),
             realpath(APPLICATION_PATH . '/library/evalmath/src'),
+            realpath(APPLICATION_PATH . '/library/default-modules/src'),
+            realpath(APPLICATION_PATH . '/library/data_getter/src'),
             APPLICATION_PATH,
             get_include_path(),
         )
