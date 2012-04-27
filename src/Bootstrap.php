@@ -26,8 +26,9 @@ class Bootstrap
     public function initProxy()
     {
         $debug = new \Botlife\Debug;
-        $httpProxy = (getenv('http_proxy')) ? getenv('http_proxy') : 
-            getenv('HTTP_PROXY');
+        $httpProxy = (getenv('https_proxy') ? getenv('https_proxy')
+                      : (getenv('http_proxy')) ? getenv('http_proxy')
+                        : getenv('HTTP_PROXY'));
         if (!$httpProxy) {
             return;
         }
