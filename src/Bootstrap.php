@@ -51,11 +51,22 @@ class Bootstrap
 
     public function initGetters()
     {
+        $debug = new \Botlife\Debug;
+        $color = new \Botlife\Application\Colors;
+        $color->output = $color::OUTPUT_ANSI;
         $httpRequest = new Entity\HttpRequest;
-        \DataGetter::addCallback(
-        	'file-content', 'curl-content',
-            array($httpRequest, 'doCurl'), 25
-        );
+        if (function_exists('curl_init')) {
+            \DataGetter::addCallback(
+            	'file-content', 'curl-content',
+                array($httpRequest, 'doCurl'), 25
+            );
+        } else {
+            $debug->log(
+        	    'NET', 'HTTP', 'cURL extension not available. '
+        	        . 'This ' . $color($color::STYLE_BOLD, 'can')
+        	        . ' lead to unexpected results.'
+            );
+        }
         \DataGetter::addCallback(
         	'file-content', 'file-get-content',
             array($httpRequest, 'fileGetContents'), 50

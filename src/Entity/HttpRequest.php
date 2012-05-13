@@ -28,12 +28,22 @@ class HttpRequest
         return curl_exec($curl);
     }
     
-    public function fileGetContents($url, $postData = null)
-    {
+    public function fileGetContents(
+        $url, $postData = null,
+        $contentType = 'application/x-www-form-urlencoded'
+    ) {
+        return false;
         if ($postData) {
-            return false;
+            $options = stream_context_get_options(stream_context_get_default());
+            $options['http']['method']  = 'POST';
+            $options['http']['content'] = $postData;
+            $options['http']['header']  = 'Content-type: ' . $contentType;
+            return file_get_contents(
+                $url, false, stream_context_create($options)
+            );
+        } else {
+            return file_get_contents($url);
         }
-        return file_get_contents($url);
     }
     
     private function _getOptions()
