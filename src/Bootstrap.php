@@ -48,6 +48,19 @@ class Bootstrap
         	'NET', 'PROXY', 'Set the default HTTP proxy to: ' . $proxy
         );
     }
+
+    public function initGetters()
+    {
+        $httpRequest = new Entity\HttpRequest;
+        \DataGetter::addCallback(
+        	'file-content', 'curl-content',
+            array($httpRequest, 'doCurl'), 25
+        );
+        \DataGetter::addCallback(
+        	'file-content', 'file-get-content',
+            array($httpRequest, 'fileGetContents'), 50
+        );
+    }
     
     public function initModules()
     {
