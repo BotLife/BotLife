@@ -9,9 +9,20 @@ use \Botlife\Module\Misc as MiscModule;
 use \Botlife\Module\Math as MathModule;
 use \Botlife\Module\Auth as AuthModule;
 use \Botlife\Module\Admin as AdminModule;
+use \Botlife\Application\Config;
 
 class Bootstrap
 {
+
+    public function initConfig()
+    {
+        Config::addOptions(array(
+            'bot.host'     => 'string',
+            'bot.port'     => 'number',
+            'bnc.password' => 'string',
+        ));
+        Config::loadFile(realpath(__DIR__ . '/../config.ini'));
+    }
 
     public function initDebugger()
     {
@@ -87,14 +98,17 @@ class Bootstrap
     
     public function initBot()
     {
-        include 'config.php';
         $bot = new Bot();
         $bot->ident = 'BotLife';
         $bot->nickname = 'BotLife';
-        $bot->connect('127.0.0.1', 8000);
-        $bot->sendRawData(
-            new \Ircbot\Command\Pass($bnc_pass)
+        $bot->connect(
+            Config::getOption('bot.host'), Config::getOption('bot.port')
         );
+        if ($bncPassword = Config::getOption('bnc.password')) {
+            $bot->sendRawData(
+                new \Ircbot\Command\Pass($bncPassword)
+            );
+        }
         Ircbot::getInstance()->getBotHandler()->addBot($bot);
     }
     
