@@ -26,7 +26,7 @@ class Config
     const CONFIG_INI  = 1;
     const CONFIG_JSON = 2;
 
-    static public function addOption($option, $type = null)
+    static public function addOption($option, $type = null, $default = null)
     {
         $data = new \StdClass;
         if (isset(self::$_types[$type])) {
@@ -35,6 +35,32 @@ class Config
         } elseif (!isset(self::$_types[$type])) {
             throw new \Exception('Unknown type \'' . $type . '\'!');
         }
+        if ($default) {
+            if (!self::_checkType($type, $default)) {
+                throw new \Exception('Default is wrong type');
+            }
+            $data->default = $default;
+        }
+        $path = explode('.', $option);
+        if (!self::$_options) {
+            self::$_options = new \StdClass;
+        }
+        $section = self::$_options;
+        foreach ($path as $part) {
+            if (!isset($section->{$part})) {
+                $section = null;
+                break;
+            }
+            $section = $section->{$part};
+        }
+        if (!is_null($section)) {
+            if (!self::_checkType($type, $section)) {
+                throw new \Exception(
+                    'Value set previously is of the wrong type on option \''
+                        . $option . '\'.'
+                );
+            }
+        }
         self::$_knownOptions[$option] = $data;
     }
     
@@ -42,22 +68,26 @@ class Config
     {
         foreach ($options as $key => $value) {
             if (is_int($key)) {
-                @list($option, $type) = (array) $value;
+                @list($option, $type, $default) = (array) $value;
             } else {
                 $option = $key;
-                @list($type) = (array) $value;
+                @list($type, $default) = (array) $value;
             }
-            self::addOption($option, $type);
+            self::addOption($option, $type, $default);
         }
     }
 
     static public function setOption($option, $value)
     {
+        $debug = \Ircbot\Application::getInstance()->getDebugger();
         if (!isset(self::$_knownOptions[$option])) {
-            throw new \Exception('Unknown setting \'' . $option . '\'.');
+            $debug->log(
+                'config', 'error', 'Unknown setting \'' . $option . '\'.',
+                $debug::LEVEL_WARN
+            );
         }
         if (!self::_checkType($option, $value)) {
-            throw new \Exception('Wrong type');
+            throw new \Exception('Wrong type on option \'' . $option . '\'.');
         }
         $path = explode('.', $option);
         if (!self::$_options) {
@@ -79,8 +109,12 @@ class Config
     
     static public function getOption($option)
     {
+        $debug = \Ircbot\Application::getInstance()->getDebugger();
         if (!isset(self::$_knownOptions[$option])) {
-            throw new \Exception('Unknown setting \'' . $option . '\'.');
+            $debug->log(
+                'config', 'error', 'Unknown setting \'' . $option . '\'.',
+                $debug::LEVEL_WARN
+            );
         }
         $path = explode('.', $option);
         if (!self::$_options) {
@@ -89,9 +123,13 @@ class Config
         $section = self::$_options;
         foreach ($path as $part) {
             if (!isset($section->{$part})) {
-                return false;
+                $section = false;
+                break;
             }
             $section = $section->{$part};
+        }
+        if (!$section && isset(self::$_knownOptions[$option]->default)) {
+            return self::$_knownOptions[$option]->default;
         }
         return $section;
     }
@@ -158,12 +196,15 @@ class Config
     
     static protected function _checkType($option, $value)
     {
-        $option = self::$_knownOptions[$option];
-        if (isset($option->type)) {
-            $check = self::$_types[$option->type];
-            return call_user_func($check, $value);
+        if (isset(self::$_types[$option])) {
+            $check = self::$_types[$option];
+        } elseif (isset(self::$_knownOptions[$option]->type)) {
+            $check = self::$_types[self::$_knownOptions[$option]->type];
+        } else {
+            return true;
         }
-        return true;
+        
+        return call_user_func($check, $value);
     }
 
 }
