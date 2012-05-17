@@ -75,12 +75,12 @@ class Bootstrap
             $debug->log(
         	    'NET', 'HTTP', 'cURL extension not available. '
         	        . 'This ' . $color($color::STYLE_BOLD, 'can')
-        	        . ' lead to unexpected results.'
+        	        . ' lead to unexpected results.', $debug::LEVEL_WARN
             );
         }
         \DataGetter::addCallback(
         	'file-content', 'file-get-content',
-            array($httpRequest, 'fileGetContents'), 50
+            array($httpRequest, 'fileGetContents'), 50, $debug::LEVEL_INFO
         );
     }
     

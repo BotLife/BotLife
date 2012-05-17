@@ -5,11 +5,12 @@ namespace Botlife;
 class Debug extends \Ircbot\Application\Debug\ADebug
 {
 
-    public function log($category, $type, $message,
-        $level = IRCBOT_DEBUG_NORMAL) {
+    public function log(
+        $category, $type, $message, $level = self::LEVEL_INFO
+    ) {
         $c = new Application\Colors;
         $c->output = Application\Colors::OUTPUT_ANSI;
-        echo $this->getSign($c, $category, $type)
+        echo $level . $this->getSign($c, $category, $type)
             . ' ' . $message . PHP_EOL;
     }
     
