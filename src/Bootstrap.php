@@ -18,8 +18,9 @@ class Bootstrap
     {
         Config::addOptions(array(
             'bot.host'     => 'string',
-            'bot.port'     => 'number',
+            'bot.port'     => array('number', 6667),
             'bnc.password' => 'string',
+            'modules.load' => array('array', array()),
         ));
         Config::loadFile(realpath(__DIR__ . '/../config.ini'));
     }

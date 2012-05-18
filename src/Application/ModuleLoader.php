@@ -9,10 +9,11 @@ class ModuleLoader
     
     public function __construct()
     {
+        $loadModules = Config::getOption('modules.load');
         $files = $this->findInfoFiles();
         foreach ($files as $file) {
             $data = parse_ini_file($file);
-            if (!$data['autoload']) {
+            if (!in_array($data['name'], $loadModules)) {
                 continue;
             }
             if (isset($this->_modules[$data['class']])) {
