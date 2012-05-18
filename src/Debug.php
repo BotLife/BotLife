@@ -25,15 +25,15 @@ class Debug extends \Ircbot\Application\Debug\ADebug
         if ($level & $logLevel) {
             $c = new Application\Colors;
             $c->output = Application\Colors::OUTPUT_ANSI;
-            echo $level . $this->getSign($c, $category, $type)
+            echo $this->getSign($c, $category, $type)
                 . ' ' . $message . PHP_EOL;
         }
     }
     
     public function getSign($c, $category, $type)
     {
-        return $c($c::STYLE_BOLD) . $c(12) . '[' . $c(3, $category) . $c(12) . '|'
-            . $c(3, $type) . $c(12) . ']' . $c(12);
+        return $c($c::STYLE_BOLD) . $c(101) . '[' . $c(102, $category)
+            . $c(101) . '|' . $c(102, $type) . $c(101) . ']' . $c(101);
     }
 
 }

@@ -48,22 +48,28 @@ abstract class ACommand
                     $this->respondWithPrefix($response, $code);
                     $response = '';
                 } else {
-                    $response .= $c(12, ' - ');
+                    $response .= $c(101, ' - ');
                 }
             }
             $first = false;
-            $response .= $c(12, $key) . ': ' . ((!is_array($value)) ? $c(3, $value) : '');
+            $response .= $c(101, $key) . ': '
+                . ((!is_array($value)) ? $c(102, $value) : '');
             if (!is_array($value)) continue;
             
-            $response .= $c(3, $value[0]) . $c(12, '(');
+            $response .= $c(102, $value[0]) . $c(101, '(');
             $arraylen = count($value[1]);
             $i        = 0;
             foreach ($value[1] as $key2 => $value2) {
-                if (is_string($key2)) $response .= $c(12, $key2 . ': ') . $c(3, $value2);
-                else                  $response .= $c(3,  $value2);
-                if (++$i < $arraylen) $response .= $c(12, '/');
+                if (is_string($key2)) {
+                    $response .= $c(101, $key2 . ': ') . $c(102, $value2);
+                } else {
+                    $response .= $c(101,  $value2);
+                }
+                if (++$i < $arraylen) {
+                    $response .= $c(102, '/');
+                }
             }
-            $response .= $c(12, ')');
+            $response .= $c(101, ')');
         }
         if (strlen($response) > 0)
             $this->respondWithPrefix($response, $code);
@@ -77,7 +83,7 @@ abstract class ACommand
         }
         $messages = explode(PHP_EOL, $message);
         foreach ($messages as $message) {
-            $response = $c(12, '[') . $c(3, $prefix) . $c(12, '] ');
+            $response = $c(101, '[') . $c(102, $prefix) . $c(101, '] ');
             $response .= $message;
             $this->respond($response);
         }

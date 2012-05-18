@@ -17,10 +17,13 @@ class Bootstrap
     public function initConfig()
     {
         Config::addOptions(array(
+            'bot.nick'     => array('string', 'BotLife'),
             'bot.host'     => 'string',
             'bot.port'     => array('number', 6667),
             'bnc.password' => 'string',
             'modules.load' => array('array', array()),
+            'net.http_proxy' => array('string', ''),
+            'misc.color' => array('array', array('12', '03')),
         ));
         Config::loadFile(realpath(__DIR__ . '/../config.ini'));
     }
@@ -41,6 +44,9 @@ class Bootstrap
         $httpProxy = (getenv('https_proxy') ? getenv('https_proxy')
                       : (getenv('http_proxy')) ? getenv('http_proxy')
                         : getenv('HTTP_PROXY'));
+        if (Config::getOption('net.http_proxy')) {
+            $httpProxy = Config::getOption('net.http_proxy');
+        }
         if (!$httpProxy) {
             return;
         }
@@ -51,7 +57,8 @@ class Bootstrap
             );
             return;
         }
-        $proxy = 'tcp://' . $parts['host'] . ':' .  $parts['port'];
+        $proxy = 'tcp://' . $parts['host'] .
+            ((isset($parts['port'])) ? ':' . $parts['port'] : '');
         $options = stream_context_get_options(stream_context_get_default());
         $options['http']['proxy'] = $proxy;
         $context = stream_context_set_default($options);
@@ -101,7 +108,7 @@ class Bootstrap
     {
         $bot = new Bot();
         $bot->ident = 'BotLife';
-        $bot->nickname = 'BotLife';
+        $bot->nickname = Config::getOption('bot.nick');
         $bot->connect(
             Config::getOption('bot.host'), Config::getOption('bot.port')
         );

@@ -16,7 +16,7 @@ class Colors
     const COLOR_LIGHT_GREEN   = 9;
     const COLOR_CYAN          = 10;
     const COLOR_LIGHT_CYAN    = 11;
-    const COLOR_LICHT_BLUE    = 12;
+    const COLOR_LIGHT_BLUE    = 12;
     const COLOR_PINK          = 13;
     const COLOR_GRAY          = 14;
     const COLOR_LIGHT_GRAY    = 15;
@@ -27,6 +27,7 @@ class Colors
     const STYLE_REVERSE       = -4;
     const STYLE_STRIKETHROUGH = -5;
     const STYLE_ITALIC        = -6;
+    const STYLE_NONE          = -7;
     
     const OUTPUT_IRC          = 1;
     const OUTPUT_ANSI         = 2;
@@ -37,14 +38,14 @@ class Colors
         self::COLOR_BLUE          => '[34m',
         self::COLOR_GREEN         => '[32m',
         self::COLOR_RED           => '[31m',
-        self::COLOR_BROWN         => '[33m',
+        self::COLOR_BROWN         => '[0m',
         self::COLOR_PURPLE        => '[35m',
         self::COLOR_ORANGE        => '[0m',
         self::COLOR_YELLOW        => '[33m',
         self::COLOR_LIGHT_GREEN   => '[32m',
         self::COLOR_CYAN          => '[36m',
         self::COLOR_LIGHT_CYAN    => '[36m',
-        self::COLOR_LICHT_BLUE    => '[34m',
+        self::COLOR_LIGHT_BLUE    => '[34m',
         self::COLOR_PINK          => '[0m',
         self::COLOR_GRAY          => '[0m',
         self::COLOR_LIGHT_GRAY    => '[0m',
@@ -65,21 +66,57 @@ class Colors
         self::STYLE_ITALIC        => 29, 
     );
     
-    public $specialMapping = array(
-        101 => self::COLOR_LICHT_BLUE,
-        102 => self::COLOR_GREEN
+    public $naming = array(
+        'white'       => self::COLOR_WHITE,
+        'black'       => self::COLOR_BLACK,
+        'blue'        => self::COLOR_BLUE,
+        'green'       => self::COLOR_GREEN,
+        'red'         => self::COLOR_RED,
+        'brown'       => self::COLOR_BROWN,
+        'purple'      => self::COLOR_PURPLE,
+        'orange'      => self::COLOR_ORANGE,
+        'yellow'      => self::COLOR_YELLOW,
+        'light green' => self::COLOR_LIGHT_GREEN,
+        'cyan'        => self::COLOR_CYAN,
+        'light cyan'  => self::COLOR_LIGHT_CYAN,
+        'light blue'  => self::COLOR_LIGHT_BLUE,
+        'pink'        => self::COLOR_PINK,
+        'gray'        => self::COLOR_GRAY,
+        'light gray'  => self::COLOR_LIGHT_GRAY,
+        'none'        => self::STYLE_NONE,
     );
+    
+    public $specialMapping = array();
     
     public $output = self::OUTPUT_IRC;
     
+    public function __construct()
+    {
+        $colors = Config::getOption('misc.color');
+        foreach ($colors as $index => $color) {
+            $color = strtolower($color);
+            if (!is_numeric($color)) {
+                if (isset($this->naming[$color])) {
+                    $color = $this->naming[$color];
+                } else {
+                    $color = self::STYLE_NONE;
+                }
+            }
+            $this->specialMapping[$index + 1] = (int) $color;
+        }
+    }
+    
     public function __invoke($color = self::STYLE_NORMAL, $text = null)
     {
-        if (isset($this->specialMapping[$color])) {
-            $color = $this->specialMapping[$color];
+        if (isset($this->specialMapping[$color - 100])) {
+            $color = $this->specialMapping[$color - 100];
         }
         if ($text) {
             return self::__invoke($color) . $text;
         } else {
+            if ($color == self::STYLE_NONE) {
+                return $text;
+            }
             if ($this->output == self::OUTPUT_IRC) {
                 if (isset($this->_irc[$color])) {
                     return sprintf('%c', $this->_irc[$color]);

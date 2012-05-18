@@ -13,7 +13,7 @@ class ModuleLoader
         $files = $this->findInfoFiles();
         foreach ($files as $file) {
             $data = parse_ini_file($file);
-            if (!in_array($data['name'], $loadModules)) {
+            if (!in_array($data['class'], $loadModules)) {
                 continue;
             }
             if (isset($this->_modules[$data['class']])) {
