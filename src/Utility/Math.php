@@ -30,10 +30,8 @@ class Math
     
     public function alphaRound($val, $precision = 2)
     {
-        if ($val < 0) {
-            $prefix = '-';
-            $val = abs($val);
-        }
+        $prefix = ($val < 0) ? '-' : '';
+        $val = abs($val);
         if ($val < 1000) {
             return $val;
         }
