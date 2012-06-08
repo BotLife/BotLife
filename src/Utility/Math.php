@@ -30,35 +30,25 @@ class Math
     
     public function alphaRound($val, $precision = 2)
     {
-        if ($val < 0) {
-            $prefix = '-';
-            $val = abs($val);
-        }
+        $prefix = ($val < 0) ? '-' : '';
+        $val = abs($val);
         if ($val < 1000) {
             return $val;
         }
         $suffix = '';
         foreach ($this->units as $key => $unit) {
-            $start = pow(1000, $key + 1);
-            if ($key + 1 == count($this->units) && $val >= ($start * 1000)) {
-                $tmp = 1;
-                while (true) {
-                    if (($val / $tmp) < 1000) {
-                        $div = $tmp / pow(1000, $key + 1);
-                        break;
-                    }
-                    $tmp *= 1000; 
-                }
-                $suffix = ' * ' .$this->alphaRound($div, 0);
-                $val /= $div;
-            } 
-            if ($val >= ($start * 1000) && $key + 1 != count($this->units)) {
-                continue;
-            }
-            $text = $prefix . number_format($val / $start, $precision, ',', '.')
-                . $unit . $suffix;
-            return $text;
+            $val = $val / 1000;
+            if ($val >= 1000) continue;
+            break;
         }
+        $suffix = '';
+        if ($val >= 1000) {
+            $suffix = ' * ' . $this->alphaRound($val, 0);
+            $val = $val / pow(10, log10($val)); //Change number to a number under the 10.
+        }
+        
+        return $prefix . number_format($val, $precision, ',', '.')
+            . $unit . $suffix;
     }
     
     static public function sqrt($int)
@@ -72,3 +62,4 @@ class Math
     }
 
 }
+
