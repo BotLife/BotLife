@@ -24,6 +24,7 @@ class Main extends AModule
         );
         \Ircbot\Handler\Timer::addTimer($timer1);
         \Ircbot\Handler\Timer::addTimer($timer2);
+        parent::__construct();
     }
 
     public function onConnect()

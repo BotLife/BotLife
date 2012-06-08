@@ -32,7 +32,6 @@ class HttpRequest
         $url, $postData = null,
         $contentType = 'application/x-www-form-urlencoded'
     ) {
-        return false;
         if ($postData) {
             $options = stream_context_get_options(stream_context_get_default());
             $options['http']['method']  = 'POST';

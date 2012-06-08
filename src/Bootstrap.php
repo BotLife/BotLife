@@ -88,7 +88,7 @@ class Bootstrap
         }
         \DataGetter::addCallback(
         	'file-content', 'file-get-content',
-            array($httpRequest, 'fileGetContents'), 50, $debug::LEVEL_INFO
+            array($httpRequest, 'fileGetContents'), 50
         );
     }
     
